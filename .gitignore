@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+.env
+
+# Data files (too large for git)
+non time stamped speeches/
+time stamped speeches/
+*.csv
+!docs/*.csv
+
+# Large dashboard file in root (we use docs/index.html for GitHub Pages)
+fed_speeches_dashboard.html
+
+# Local Plotly.js file
+scripts/plotly.min.js
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
