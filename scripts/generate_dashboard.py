@@ -1728,66 +1728,82 @@ html_content = f"""
         }}, {{ responsive: true }});
 
         // Chart: Role Distribution
+        const roleColorScale = [
+            '#0c4a6e', '#0369a1', '#0284c7', '#0ea5e9', '#38bdf8', '#7dd3fc', '#bae6fd', '#e0f2fe', '#f0f9ff'
+        ];
         Plotly.newPlot('chart-roles', [{{
             x: roleValues,
             y: roleNames,
             type: 'bar',
             orientation: 'h',
             marker: {{
-                color: roleValues.map((_, i) => `rgba(168, 85, 247, ${{0.4 + (i / roleValues.length) * 0.5}})`),
-                line: {{ color: 'rgba(139, 92, 246, 0.3)', width: 1 }}
+                color: roleValues.map((_, i) => roleColorScale[i % roleColorScale.length]),
+                line: {{ color: 'rgba(255,255,255,0.5)', width: 1 }}
             }},
             hovertemplate: '<b>%{{y}}</b><br>%{{x:,}} speeches<extra></extra>'
         }}], {{
             title: {{ text: 'Speeches by Role', font: {{ size: 14, color: '#334155' }} }},
             xaxis: {{ title: '', tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(148, 163, 184, 0.2)', zeroline: false }},
-            yaxis: {{ automargin: true, tickfont: {{ size: 10, color: '#64748b' }}, ticksuffix: '  —  ' }},
+            yaxis: {{ automargin: true, tickfont: {{ size: 11, color: '#475569' }} }},
             height: 380,
-            margin: {{ l: 180, r: 20, t: 40, b: 25 }},
+            margin: {{ l: 200, r: 30, t: 40, b: 30 }},
             plot_bgcolor: 'rgba(0,0,0,0)',
             paper_bgcolor: 'rgba(0,0,0,0)',
-            bargap: 0.15
+            bargap: 0.2
         }}, {{ responsive: true }});
 
-        // Chart: Roles Over Time
+        // Chart: Roles Over Time - cleaner color palette
         const roleColors = {{
-            'President': '#0284c7',
-            'Governor': '#8b5cf6',
+            'President': '#0c4a6e',
+            'Governor': '#0ea5e9',
             'Chair': '#dc2626',
             'Vice Chair/Governor': '#059669',
-            'Governor/Vice Chair': '#059669',
+            'Governor/Vice Chair': '#10b981',
             'Governor/Vice Chair for Supervision': '#f59e0b',
             'Executive Vice President': '#64748b',
             'First Vice President': '#94a3b8',
             'Interim President': '#cbd5e1'
         }};
+        const roleLegendNames = {{
+            'President': 'President',
+            'Governor': 'Governor',
+            'Chair': 'Chair',
+            'Vice Chair/Governor': 'Vice Chair',
+            'Governor/Vice Chair': 'Gov/VC',
+            'Governor/Vice Chair for Supervision': 'VC Supervision',
+            'Executive Vice President': 'Exec VP',
+            'First Vice President': 'First VP',
+            'Interim President': 'Interim'
+        }};
         const roleTraces = Object.keys(roleTracesData).map(role => ({{
             x: roleYears,
             y: roleTracesData[role],
-            name: role.replace('Governor/Vice Chair for Supervision', 'Gov/VC Supervision').replace('Vice Chair/Governor', 'VC/Gov').replace('Governor/Vice Chair', 'Gov/VC'),
+            name: roleLegendNames[role] || role,
             type: 'scatter',
             mode: 'lines',
             stackgroup: 'one',
-            line: {{ width: 0.5, color: 'rgba(255,255,255,0.3)' }},
+            line: {{ width: 0.5, color: 'rgba(255,255,255,0.4)' }},
             fillcolor: roleColors[role] || '#94a3b8',
             hovertemplate: '<b>' + role + '</b><br>%{{y:.1f}}%<extra></extra>'
         }}));
 
         Plotly.newPlot('chart-roles-time', roleTraces, {{
             title: {{ text: 'Role Mix Over Time', font: {{ size: 14, color: '#334155' }} }},
-            xaxis: {{ title: '', dtick: 5, tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(0,0,0,0)', zeroline: false }},
+            xaxis: {{ title: '', dtick: 5, tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(0,0,0,0)', zeroline: false, range: [roleYears[0] - 0.5, roleYears[roleYears.length-1] + 0.5] }},
             yaxis: {{ title: '', ticksuffix: '%', range: [0, 100], tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(148, 163, 184, 0.15)', zeroline: false }},
             height: 380,
-            margin: {{ l: 45, r: 20, t: 40, b: 80 }},
+            margin: {{ l: 45, r: 30, t: 40, b: 90 }},
             plot_bgcolor: 'rgba(0,0,0,0)',
             paper_bgcolor: 'rgba(0,0,0,0)',
             hovermode: 'x unified',
             legend: {{
                 orientation: 'h',
-                y: -0.2,
+                y: -0.25,
                 x: 0.5,
                 xanchor: 'center',
-                font: {{ size: 8, color: '#64748b' }}
+                font: {{ size: 10, color: '#475569' }},
+                bgcolor: 'rgba(255,255,255,0.8)',
+                borderwidth: 0
             }}
         }}, {{ responsive: true }});
 
