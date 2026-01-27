@@ -929,11 +929,11 @@ html_content = f"""
         }}
 
         .topic-chart-legend {{
-            width: 220px;
+            width: 250px;
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.4rem;
             padding-top: 2rem;
         }}
 
@@ -967,9 +967,10 @@ html_content = f"""
         }}
 
         .legend-label {{
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
             flex: 1;
+            white-space: nowrap;
         }}
 
         .legend-value {{
@@ -995,44 +996,52 @@ html_content = f"""
         /* === Topic Cards === */
         .topic-grid {{
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.25rem;
-            margin-top: 1.25rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }}
+
+        @media (max-width: 1000px) {{
+            .topic-grid {{ grid-template-columns: repeat(2, 1fr); }}
+        }}
+
+        @media (max-width: 550px) {{
+            .topic-grid {{ grid-template-columns: 1fr; }}
         }}
 
         .topic-card {{
             background: var(--bg-card);
-            border-radius: var(--radius-md);
-            padding: 1.25rem;
+            border-radius: var(--radius-sm);
+            padding: 0.75rem 0.9rem;
             border: 1px solid var(--border-color);
-            border-left: 3px solid var(--accent-teal);
+            border-left: 2px solid var(--accent-teal);
             transition: transform 180ms ease, border-color 180ms ease;
         }}
 
         .topic-card:hover {{
-            transform: translateY(-2px);
+            transform: translateY(-1px);
             border-color: #D7CFC5;
         }}
 
         .topic-card h3 {{
-            font-size: 1rem;
+            font-size: 0.8rem;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.4rem;
         }}
 
         .topic-words {{
             display: flex;
             flex-wrap: wrap;
-            gap: 0.4rem;
+            gap: 0.25rem;
         }}
 
         .topic-word {{
             background: #F5F0E8;
             color: var(--text-muted);
-            padding: 0.3rem 0.7rem;
-            border-radius: var(--radius-sm);
-            font-size: 0.8rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.68rem;
             border: 1px solid var(--border-color);
         }}
 
@@ -1040,7 +1049,7 @@ html_content = f"""
             background: #E6F2F1;
             color: var(--accent-teal);
             font-weight: 600;
-            border-color: #99CCC7;
+            border-color: #B8DDD9;
         }}
 
         /* === Speech Explorer === */
@@ -1302,6 +1311,10 @@ html_content = f"""
 
         .chart-card:hover::after {{
             opacity: 1;
+        }}
+
+        .chart-card.topic-chart-container::after {{
+            display: none;
         }}
 
         /* === Navigation Tabs === */
@@ -1647,7 +1660,6 @@ html_content = f"""
             <div class="chart-grid">
                 <div class="chart-card full-width" id="chart-length"></div>
                 <div class="chart-card full-width" id="chart-readability"></div>
-                <div class="chart-card full-width" id="chart-sentiment"></div>
                 <div class="chart-card full-width" id="chart-uncertainty"></div>
             </div>
         </div>
@@ -1828,7 +1840,7 @@ html_content = f"""
             type: 'scatter',
             mode: 'lines',
             fill: 'tozeroy',
-            line: {{ color: '#0F766E', width: 2.5, shape: 'spline' }},
+            line: {{ color: '#0D9488', width: 2.5, shape: 'spline' }},
             fillcolor: 'rgba(15, 118, 110, 0.12)',
             hovertemplate: '<b>%{{x}}</b><br>%{{y}} speeches<extra></extra>'
         }}], {{
@@ -1888,11 +1900,11 @@ html_content = f"""
                 type: 'bar',
                 marker: {{
                     color: timeCounts.map((c, i) => {{
-                        // Warm editorial tones: morning=sand, midday=sage, afternoon=teal, evening=mauve
-                        if (i >= 6 && i < 10) return '#D4C4A8';   // Early morning - warm sand
-                        if (i >= 10 && i < 14) return '#7C9885';  // Late morning/lunch - sage
-                        if (i >= 14 && i < 18) return '#0F766E';  // Afternoon - teal (accent)
-                        return '#9B8AA5';                          // Evening/night - muted mauve
+                        // Modern vibrant tones by time of day
+                        if (i >= 6 && i < 10) return '#E6A940';   // Early morning - golden amber
+                        if (i >= 10 && i < 14) return '#4A9B6E';  // Late morning/lunch - fresh green
+                        if (i >= 14 && i < 18) return '#0D9488';  // Afternoon - bright teal
+                        return '#9B6B9E';                          // Evening/night - orchid
                     }}),
                     line: {{ color: 'rgba(255,255,255,0.8)', width: 1 }}
                 }},
@@ -1932,7 +1944,7 @@ html_content = f"""
             type: 'bar',
             orientation: 'h',
             marker: {{
-                color: '#0F766E',
+                color: '#0D9488',
                 line: {{ color: 'rgba(255,255,255,0.5)', width: 1 }}
             }},
             hovertemplate: '<b>%{{y}}</b><br>%{{x}} speeches<extra></extra>'
@@ -1954,7 +1966,7 @@ html_content = f"""
             type: 'bar',
             orientation: 'h',
             marker: {{
-                color: '#0F766E',
+                color: '#E07A5F',
                 line: {{ color: 'rgba(255,255,255,0.5)', width: 1 }}
             }},
             hovertemplate: '<b>%{{y}}</b><br>%{{x:,}} avg words<extra></extra>'
@@ -1976,7 +1988,7 @@ html_content = f"""
             type: 'bar',
             orientation: 'h',
             marker: {{
-                color: '#0F766E',
+                color: '#E6A940',
                 line: {{ color: 'rgba(255,255,255,0.5)', width: 1 }}
             }},
             hovertemplate: '<b>%{{y}}</b><br>%{{x:,}} speeches<extra></extra>'
@@ -1991,18 +2003,17 @@ html_content = f"""
             bargap: 0.2
         }}, {{ responsive: true }});
 
-        // Chart: Roles Over Time - cleaner color palette
-        // Colorblind-safe palette for role stacked area
+        // Chart: Roles Over Time - modern vibrant palette
         const roleColors = {{
-            'President': '#0F766E',
-            'Governor': '#7C9885',
-            'Chair': '#B8A58B',
-            'Vice Chair/Governor': '#9B8AA5',
-            'Governor/Vice Chair': '#8DAAB8',
-            'Governor/Vice Chair for Supervision': '#F59E0B',
-            'Executive Vice President': '#64748B',
-            'First Vice President': '#94A3B8',
-            'Interim President': '#CBD5E1'
+            'President': '#0D9488',
+            'Governor': '#4A9B6E',
+            'Chair': '#E6A940',
+            'Vice Chair/Governor': '#9B6B9E',
+            'Governor/Vice Chair': '#5B8FB9',
+            'Governor/Vice Chair for Supervision': '#E07A5F',
+            'Executive Vice President': '#7C8A99',
+            'First Vice President': '#A8B5C4',
+            'Interim President': '#C4BDB3'
         }};
         const roleLegendNames = {{
             'President': 'President',
@@ -2055,33 +2066,40 @@ html_content = f"""
                 y: speakerTopicNames,
                 type: 'heatmap',
                 colorscale: [
-                    [0, '#f8fafc'],
-                    [0.2, '#e0f2fe'],
-                    [0.4, '#7dd3fc'],
-                    [0.6, '#38bdf8'],
-                    [0.8, '#0284c7'],
-                    [1, '#0c4a6e']
+                    [0, '#FBF7F2'],
+                    [0.25, '#D4EAE1'],
+                    [0.5, '#6DBFB0'],
+                    [0.75, '#0D9488'],
+                    [1, '#065F56']
                 ],
-                xgap: 2,
-                ygap: 2,
+                xgap: 3,
+                ygap: 3,
                 hovertemplate: '<b>%{{y}}</b><br>%{{x}}: %{{z:.1f}}%<extra></extra>',
                 colorbar: {{
-                    title: {{ text: '%', font: {{ size: 11, color: '#6B7280' }} }},
-                    thickness: 12,
-                    len: 0.8,
-                    tickfont: {{ size: 10, color: '#4B5563' }},
-                    outlinewidth: 0
+                    title: {{ text: 'Topic<br>Focus', side: 'top', font: {{ size: 12, color: '#111827', family: 'Inter, system-ui, sans-serif' }} }},
+                    thickness: 18,
+                    len: 0.6,
+                    y: 0.5,
+                    ypad: 10,
+                    tickfont: {{ size: 12, color: '#111827' }},
+                    outlinewidth: 0,
+                    x: 1.02,
+                    tickvals: [10, 20, 30, 40],
+                    ticktext: ['10%', '20%', '30%', '40%'],
+                    bgcolor: 'rgba(255,255,255,0.9)',
+                    borderwidth: 1,
+                    bordercolor: '#E7E1D8'
                 }}
             }}], {{
                 title: {{ text: 'Speaker Topic Focus', font: {{ size: 14, color: '#111827' }} }},
-                xaxis: {{ title: '', tickangle: -45, tickfont: {{ size: 11, color: '#6B7280' }}, automargin: true, gridcolor: 'rgba(0,0,0,0)' }},
-                yaxis: {{ title: '', automargin: true, tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: 'rgba(0,0,0,0)' }},
-                height: 480,
-                margin: {{ l: 120, r: 60, t: 50, b: 180 }},
+                xaxis: {{ title: '', tickangle: -30, tickfont: {{ size: 10, color: '#4B5563' }}, side: 'bottom', gridcolor: 'rgba(0,0,0,0)' }},
+                yaxis: {{ title: '', automargin: true, tickfont: {{ size: 11, color: '#4B5563' }}, gridcolor: 'rgba(0,0,0,0)' }},
+                height: 420,
+                margin: {{ l: 130, r: 100, t: 60, b: 100 }},
                 plot_bgcolor: 'rgba(0,0,0,0)',
                 paper_bgcolor: 'rgba(0,0,0,0)',
                 annotations: [{{
-                    x: 0.5, y: 1.08, xref: 'paper', yref: 'paper',
+                    x: 0.5, y: 1.12, xref: 'paper', yref: 'paper',
                     text: 'Avg topic probability per speaker (top 12 by speech count)',
                     showarrow: false, font: {{ size: 10, color: '#9CA3AF' }}, xanchor: 'center'
                 }}]
@@ -2094,7 +2112,7 @@ html_content = f"""
             type: 'histogram',
             nbinsx: 30,
             marker: {{
-                color: '#B8A58B',
+                color: '#5B8FB9',
                 line: {{ color: 'rgba(255,255,255,0.8)', width: 1 }}
             }},
             hovertemplate: '<b>%{{x:,.0f}} words</b><br>%{{y}} speeches<extra></extra>'
@@ -2137,8 +2155,8 @@ html_content = f"""
                 y: readabilityScores,
                 type: 'scatter',
                 mode: 'lines+markers',
-                line: {{ color: '#0F766E', width: 2.5, shape: 'spline' }},
-                marker: {{ size: 5, color: '#0F766E' }},
+                line: {{ color: '#0D9488', width: 2.5, shape: 'spline' }},
+                marker: {{ size: 5, color: '#0D9488' }},
                 connectgaps: true,
                 hovertemplate: '<b>%{{x}}</b><br>Fog Index: %{{y:.1f}}<extra></extra>'
             }}], {{
@@ -2160,43 +2178,14 @@ html_content = f"""
                 }}]
             }}, {{ responsive: true }});
 
-            // Chart 7: Sentiment Over Time (Hawkish/Dovish) - FinBERT-FOMC
-            if (hawkishDovishAvailable) {{
-                Plotly.newPlot('chart-sentiment', [{{
-                    x: hdYears,
-                    y: sentimentScores,
-                    type: 'scatter',
-                    mode: 'lines+markers',
-                    line: {{ color: '#4B5563', width: 2.5, shape: 'spline' }},
-                    marker: {{ size: 5, color: '#4B5563' }},
-                    fill: 'tozeroy',
-                    fillcolor: 'rgba(75, 85, 99, 0.1)',
-                    connectgaps: true,
-                    hovertemplate: '<b>%{{x}}</b><br>Score: %{{y:.3f}}<extra></extra>'
-                }}], {{
-                    title: {{ text: 'Hawkish vs Dovish Sentiment (FinBERT-FOMC)', font: {{ size: 14, color: '#111827' }} }},
-                    xaxis: {{ title: '', dtick: 5, range: [1995, 2026], tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: '#E7E1D8', zeroline: false }},
-                    yaxis: {{ title: '', zeroline: true, zerolinecolor: '#D1CBC2', zerolinewidth: 1, range: [-0.35, 0.15], tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: '#E7E1D8' }},
-                    height: 280,
-                    margin: {{ l: 45, r: 20, t: 55, b: 35 }},
-                    plot_bgcolor: 'rgba(0,0,0,0)',
-                    paper_bgcolor: 'rgba(0,0,0,0)',
-                    annotations: [
-                        {{ x: 0.5, y: 1.15, xref: 'paper', yref: 'paper', text: 'Score = avg(+1 hawkish, -1 dovish, 0 neutral)', showarrow: false, font: {{ size: 9, color: '#9CA3AF' }}, xanchor: 'center' }},
-                        {{ x: 0.98, y: 0.95, xref: 'paper', yref: 'paper', text: '↑ Hawkish', showarrow: false, font: {{ size: 9, color: '#10b981' }}, xanchor: 'right' }},
-                        {{ x: 0.98, y: 0.08, xref: 'paper', yref: 'paper', text: '↓ Dovish', showarrow: false, font: {{ size: 9, color: '#f43f5e' }}, xanchor: 'right' }}
-                    ]
-                }}, {{ responsive: true }});
-            }}
-
             // Chart 8: Uncertainty Index Over Time
             Plotly.newPlot('chart-uncertainty', [{{
                 x: metricsYears,
                 y: uncertaintyScores,
                 type: 'scatter',
                 mode: 'lines+markers',
-                line: {{ color: '#0F766E', width: 2.5, shape: 'spline' }},
-                marker: {{ size: 5, color: '#0F766E' }},
+                line: {{ color: '#0D9488', width: 2.5, shape: 'spline' }},
+                marker: {{ size: 5, color: '#0D9488' }},
                 fill: 'tozeroy',
                 fillcolor: 'rgba(15, 118, 110, 0.12)',
                 connectgaps: true,
@@ -2219,15 +2208,15 @@ html_content = f"""
 
         // Chart 9: LDA Topics Over Time - Redesigned per spec
         if (ldaAvailable) {{
-            // Muted editorial palette (teal accent + warm neutrals)
+            // Modern editorial palette - vibrant but sophisticated
             const topicColors = [
-                '#0F766E',  // Teal (primary accent)
-                '#B8A58B',  // Warm tan
-                '#7C9885',  // Sage green
-                '#9B8AA5',  // Muted lavender
-                '#C4A77D',  // Golden wheat
-                '#8DAAB8',  // Dusty blue
-                '#D1CBC2'   // Warm gray (for "Other")
+                '#0D9488',  // Teal (brighter)
+                '#E07A5F',  // Coral terracotta
+                '#4A9B6E',  // Fresh green
+                '#9B6B9E',  // Orchid purple
+                '#E6A940',  // Golden amber
+                '#5B8FB9',  // Ocean blue
+                '#C4BDB3'   // Warm gray (for "Other")
             ];
 
             // Calculate average share for each topic to sort by importance
@@ -2801,14 +2790,6 @@ html_content = f"""
 
         // LDA topics over time click - filter by topic
         if (ldaAvailable) {{
-        }}
-
-        // Sentiment chart click - filter by year
-        if (hawkishDovishAvailable) {{
-            document.getElementById('chart-sentiment').on('plotly_click', function(data) {{
-                const year = data.points[0].x;
-                applySpeechFilter('year', year, `Year: ${{year}}`);
-            }});
         }}
 
         // Readability chart click - filter by year
