@@ -517,25 +517,27 @@ html_content = f"""
     <title>Federal Reserve Speeches Dashboard</title>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <style>
-        /* === Design System === */
+        /* === Design System (Editorial Style) === */
         :root {{
-            --bg-page: #F8FAFC;
+            --bg-page: #FBF7F2;
             --bg-card: #FFFFFF;
-            --border-color: #E2E8F0;
-            --text-primary: #0F172A;
-            --text-muted: #475569;
-            --text-light: #94A3B8;
-            --accent-primary: #2563EB;
-            --accent-secondary: #14B8A6;
-            --accent-success: #16A34A;
-            --accent-warning: #F59E0B;
+            --border-color: #E7E1D8;
+            --text-primary: #111827;
+            --text-muted: #4B5563;
+            --text-light: #6B7280;
+            --accent-teal: #0F766E;
+            --accent-teal-hover: #0B5F59;
+            --accent-primary: #0F766E;
+            --accent-secondary: #0F766E;
+            --accent-success: #059669;
+            --accent-warning: #D97706;
             --accent-danger: #DC2626;
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-            --shadow-md: 0 2px 8px rgba(0,0,0,0.06);
-            --shadow-lg: 0 4px 16px rgba(0,0,0,0.08);
+            --shadow-sm: none;
+            --shadow-md: 0 1px 3px rgba(0,0,0,0.04);
+            --shadow-lg: 0 2px 6px rgba(0,0,0,0.06);
         }}
 
         * {{
@@ -545,24 +547,35 @@ html_content = f"""
         }}
 
         body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
             background: var(--bg-page);
             color: var(--text-muted);
             line-height: 1.6;
             min-height: 100vh;
         }}
 
+        a {{
+            color: var(--accent-teal);
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 3px;
+            transition: color 0.15s;
+        }}
+
+        a:hover {{
+            color: var(--accent-teal-hover);
+        }}
+
         .container {{
-            max-width: 1400px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 1.5rem 2rem;
+            padding: 2rem 3rem;
         }}
 
         /* === Header === */
         header {{
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 0;
+            background: var(--accent-teal);
+            padding: 1.5rem 0;
             margin-bottom: 0;
         }}
 
@@ -570,50 +583,50 @@ html_content = f"""
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 2rem;
+            padding: 0 3rem;
             gap: 2rem;
         }}
 
         .header-left {{
             display: flex;
             flex-direction: column;
-            gap: 0.15rem;
+            gap: 0.25rem;
         }}
 
         h1 {{
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            letter-spacing: -0.3px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            letter-spacing: -0.5px;
         }}
 
         .subtitle {{
-            font-size: 0.75rem;
-            color: var(--text-light);
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.8);
             font-weight: 400;
         }}
 
         .header-stats {{
             display: flex;
-            gap: 1.5rem;
+            gap: 2rem;
         }}
 
         .header-stat {{
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.1rem;
+            gap: 0.15rem;
         }}
 
         .header-stat-value {{
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-primary);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #FFFFFF;
         }}
 
         .header-stat-label {{
-            font-size: 0.65rem;
-            color: var(--text-light);
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.75);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }}
@@ -622,39 +635,38 @@ html_content = f"""
         .stats-grid {{
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
             flex-wrap: wrap;
         }}
 
         .stat-card {{
             background: var(--bg-card);
-            padding: 1rem 1.75rem;
+            padding: 1.25rem 2rem;
             border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.25rem;
+            gap: 0.35rem;
             border: 1px solid var(--border-color);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 180ms ease, border-color 180ms ease;
         }}
 
         .stat-card:hover {{
             transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            border-color: #D7CFC5;
         }}
 
         .stat-value {{
-            font-size: 1.6rem;
-            font-weight: 600;
+            font-size: 1.75rem;
+            font-weight: 700;
             color: var(--text-primary);
         }}
 
         .stat-label {{
-            font-size: 0.7rem;
-            color: var(--text-light);
+            font-size: 0.75rem;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-weight: 500;
@@ -664,23 +676,22 @@ html_content = f"""
         .chart-grid {{
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-bottom: 1rem;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }}
 
         .chart-card {{
             background: var(--bg-card);
             border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
-            padding: 0.75rem;
+            padding: 1.25rem;
             overflow: hidden;
             border: 1px solid var(--border-color);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 180ms ease, border-color 180ms ease;
         }}
 
         .chart-card:hover {{
             transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            border-color: #D7CFC5;
         }}
 
         .chart-card.full-width {{
@@ -689,11 +700,11 @@ html_content = f"""
 
         /* === Section Accordions === */
         .section-title {{
-            font-size: 0.95rem;
-            font-weight: 600;
+            font-size: 1.1rem;
+            font-weight: 700;
             color: var(--text-primary);
-            margin: 1.25rem 0 0.75rem;
-            padding: 0.75rem 1rem;
+            margin: 2rem 0 1rem;
+            padding: 1rem 1.25rem;
             background: var(--bg-card);
             border-radius: var(--radius-md);
             cursor: pointer;
@@ -707,11 +718,11 @@ html_content = f"""
         }}
 
         .section-title:hover {{
-            background: #F1F5F9;
+            background: #F5F0E8;
         }}
 
         .section-title:not(.collapsed) {{
-            border-left-color: var(--accent-primary);
+            border-left-color: var(--accent-teal);
         }}
 
         .section-title .section-icon {{
@@ -743,15 +754,14 @@ html_content = f"""
         .table-container {{
             background: var(--bg-card);
             border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
             overflow: hidden;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             border: 1px solid var(--border-color);
         }}
 
         .table-header {{
-            padding: 0.85rem 1.25rem;
-            background: var(--bg-page);
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
             border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
@@ -759,25 +769,26 @@ html_content = f"""
         }}
 
         .table-title {{
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
         }}
 
         .search-box {{
-            padding: 0.5rem 1rem;
+            padding: 0.6rem 1rem;
             border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
             font-size: 0.9rem;
-            width: 250px;
+            width: 280px;
             outline: none;
             transition: all 0.2s;
             background: var(--bg-card);
+            font-family: inherit;
         }}
 
         .search-box:focus {{
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            border-color: var(--accent-teal);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
         }}
 
         .data-table {{
@@ -786,11 +797,11 @@ html_content = f"""
         }}
 
         .data-table th {{
-            background: var(--bg-page);
-            padding: 0.85rem 1rem;
+            background: #F5F0E8;
+            padding: 1rem 1.25rem;
             text-align: left;
             font-weight: 600;
-            color: var(--text-muted);
+            color: var(--text-primary);
             font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -800,18 +811,18 @@ html_content = f"""
         }}
 
         .data-table th:hover {{
-            background: #F1F5F9;
+            background: #EDE6DA;
         }}
 
         .data-table td {{
-            padding: 0.85rem 1rem;
+            padding: 1rem 1.25rem;
             border-bottom: 1px solid var(--border-color);
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }}
 
         .data-table tbody tr:hover {{
-            background: #F8FAFC;
+            background: #FAF7F2;
         }}
 
         .data-table tbody tr:last-child td {{
@@ -820,23 +831,23 @@ html_content = f"""
 
         footer {{
             text-align: center;
-            padding: 2rem 1rem;
-            color: var(--text-light);
-            font-size: 0.75rem;
+            padding: 2.5rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
             border-top: 1px solid var(--border-color);
-            margin-top: 2rem;
+            margin-top: 3rem;
         }}
 
         /* === Topic Chart Module === */
         .topic-chart-container {{
-            padding: 1.25rem;
+            padding: 1.5rem;
         }}
 
         .topic-chart-header {{
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
             flex-wrap: wrap;
             gap: 1rem;
         }}
@@ -844,18 +855,18 @@ html_content = f"""
         .topic-chart-title {{
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
+            gap: 0.35rem;
         }}
 
         .chart-title-text {{
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 1.15rem;
+            font-weight: 700;
             color: var(--text-primary);
         }}
 
         .chart-subtitle-text {{
-            font-size: 0.75rem;
-            color: var(--text-light);
+            font-size: 0.85rem;
+            color: var(--text-muted);
         }}
 
         .topic-chart-controls {{
@@ -872,13 +883,15 @@ html_content = f"""
         }}
 
         .toggle-btn {{
-            padding: 0.4rem 0.75rem;
-            font-size: 0.8rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
             border: none;
             background: var(--bg-card);
             color: var(--text-muted);
             cursor: pointer;
             transition: all 0.15s;
+            font-family: inherit;
+            font-weight: 500;
         }}
 
         .toggle-btn:not(:last-child) {{
@@ -886,22 +899,23 @@ html_content = f"""
         }}
 
         .toggle-btn:hover {{
-            background: var(--bg-page);
+            background: #F5F0E8;
         }}
 
         .toggle-btn.active {{
-            background: var(--accent-primary);
+            background: var(--accent-teal);
             color: white;
         }}
 
         .topic-n-select {{
-            padding: 0.4rem 0.6rem;
-            font-size: 0.8rem;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.85rem;
             border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
             background: var(--bg-card);
             color: var(--text-muted);
             cursor: pointer;
+            font-family: inherit;
         }}
 
         .topic-chart-body {{
@@ -981,53 +995,52 @@ html_content = f"""
         /* === Topic Cards === */
         .topic-grid {{
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1.25rem;
         }}
 
         .topic-card {{
             background: var(--bg-card);
             border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
-            padding: 1rem;
+            padding: 1.25rem;
             border: 1px solid var(--border-color);
-            border-left: 3px solid var(--accent-primary);
-            transition: all 0.2s;
+            border-left: 3px solid var(--accent-teal);
+            transition: transform 180ms ease, border-color 180ms ease;
         }}
 
         .topic-card:hover {{
             transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            border-color: #D7CFC5;
         }}
 
         .topic-card h3 {{
-            font-size: 0.9rem;
-            font-weight: 600;
+            font-size: 1rem;
+            font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
         }}
 
         .topic-words {{
             display: flex;
             flex-wrap: wrap;
-            gap: 0.35rem;
+            gap: 0.4rem;
         }}
 
         .topic-word {{
-            background: var(--bg-page);
+            background: #F5F0E8;
             color: var(--text-muted);
-            padding: 0.25rem 0.6rem;
+            padding: 0.3rem 0.7rem;
             border-radius: var(--radius-sm);
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             border: 1px solid var(--border-color);
         }}
 
         .topic-word.primary {{
-            background: #EFF6FF;
-            color: var(--accent-primary);
-            font-weight: 500;
-            border-color: #BFDBFE;
+            background: #E6F2F1;
+            color: var(--accent-teal);
+            font-weight: 600;
+            border-color: #99CCC7;
         }}
 
         /* === Speech Explorer === */
@@ -1049,45 +1062,47 @@ html_content = f"""
         }}
 
         .lda-filter {{
-            padding: 0.5rem 0.85rem;
+            padding: 0.6rem 1rem;
             border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
             background: var(--bg-card);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.2s;
             color: var(--text-muted);
+            font-family: inherit;
         }}
 
         .lda-filter:focus {{
             outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            border-color: var(--accent-teal);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
         }}
 
         .clear-filter-btn {{
-            padding: 0.5rem 1rem;
-            background: var(--accent-primary);
+            padding: 0.6rem 1.25rem;
+            background: var(--accent-teal);
             color: white;
             border: none;
             border-radius: var(--radius-sm);
             cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 500;
+            font-size: 0.9rem;
+            font-weight: 600;
             transition: all 0.2s;
+            font-family: inherit;
         }}
 
         .clear-filter-btn:hover {{
-            background: #1D4ED8;
+            background: var(--accent-teal-hover);
             transform: translateY(-1px);
         }}
 
         .filter-badge {{
-            background: var(--accent-primary);
+            background: var(--accent-teal);
             color: white;
-            padding: 0.2rem 0.6rem;
+            padding: 0.25rem 0.7rem;
             border-radius: 1rem;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             margin-left: 0.5rem;
         }}
 
@@ -1101,22 +1116,21 @@ html_content = f"""
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }}
 
         .speech-item {{
             background: var(--bg-card);
             border-radius: var(--radius-md);
-            padding: 1rem;
-            box-shadow: var(--shadow-sm);
+            padding: 1.25rem;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: transform 180ms ease, border-color 180ms ease;
             border: 1px solid var(--border-color);
-            border-left: 3px solid var(--accent-primary);
+            border-left: 3px solid var(--accent-teal);
         }}
 
         .speech-item:hover {{
-            box-shadow: var(--shadow-md);
+            border-color: #D7CFC5;
             transform: translateY(-2px);
         }}
 
@@ -1814,13 +1828,13 @@ html_content = f"""
             type: 'scatter',
             mode: 'lines',
             fill: 'tozeroy',
-            line: {{ color: '#2563EB', width: 2.5, shape: 'spline' }},
-            fillcolor: 'rgba(37, 99, 235, 0.12)',
+            line: {{ color: '#0F766E', width: 2.5, shape: 'spline' }},
+            fillcolor: 'rgba(15, 118, 110, 0.12)',
             hovertemplate: '<b>%{{x}}</b><br>%{{y}} speeches<extra></extra>'
         }}], {{
-            title: {{ text: 'Speeches Per Year', font: {{ size: 14, color: '#0F172A' }} }},
-            xaxis: {{ title: '', dtick: 5, tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false, automargin: true }},
-            yaxis: {{ title: '', tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
+            title: {{ text: 'Speeches Per Year', font: {{ size: 14, color: '#111827' }} }},
+            xaxis: {{ title: '', dtick: 5, tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: '#E7E1D8', zeroline: false, automargin: true }},
+            yaxis: {{ title: '', tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: '#E7E1D8', zeroline: false }},
             height: 320,
             margin: {{ l: 45, r: 40, t: 45, b: 35 }},
             plot_bgcolor: 'rgba(0,0,0,0)',
@@ -1847,19 +1861,19 @@ html_content = f"""
             ygap: 2,
             hovertemplate: '<b>%{{y}} %{{x}}</b><br>%{{z}} speeches<extra></extra>',
             colorbar: {{
-                title: {{ text: 'Speeches', font: {{ size: 11, color: '#64748b' }} }},
+                title: {{ text: 'Speeches', font: {{ size: 11, color: '#6B7280' }} }},
                 thickness: 12,
                 len: 0.8,
-                tickfont: {{ size: 10, color: '#475569' }},
+                tickfont: {{ size: 10, color: '#4B5563' }},
                 outlinewidth: 0
             }}
         }}], {{
             title: {{
                 text: 'Speech Frequency by Month and Year',
-                font: {{ size: 14, color: '#0F172A' }}
+                font: {{ size: 14, color: '#111827' }}
             }},
-            xaxis: {{ title: '', dtick: 5, tickfont: {{ size: 10, color: '#475569' }}, gridcolor: 'rgba(0,0,0,0)', automargin: true, constrain: 'domain' }},
-            yaxis: {{ title: '', tickfont: {{ size: 10, color: '#475569' }}, gridcolor: 'rgba(0,0,0,0)', automargin: true }},
+            xaxis: {{ title: '', dtick: 5, tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: 'rgba(0,0,0,0)', automargin: true, constrain: 'domain' }},
+            yaxis: {{ title: '', tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: 'rgba(0,0,0,0)', automargin: true }},
             height: 320,
             margin: {{ l: 35, r: 60, t: 45, b: 30 }},
             plot_bgcolor: 'rgba(0,0,0,0)',
@@ -1874,28 +1888,28 @@ html_content = f"""
                 type: 'bar',
                 marker: {{
                     color: timeCounts.map((c, i) => {{
-                        // Soft pastels: morning=peach, midday=mint, afternoon=blue, evening=lavender
-                        if (i >= 6 && i < 10) return '#FECACA';   // Early morning - soft peach
-                        if (i >= 10 && i < 14) return '#BBF7D0';  // Late morning/lunch - soft mint
-                        if (i >= 14 && i < 18) return '#93C5FD';  // Afternoon - soft blue
-                        return '#DDD6FE';                          // Evening/night - soft lavender
+                        // Warm editorial tones: morning=sand, midday=sage, afternoon=teal, evening=mauve
+                        if (i >= 6 && i < 10) return '#D4C4A8';   // Early morning - warm sand
+                        if (i >= 10 && i < 14) return '#7C9885';  // Late morning/lunch - sage
+                        if (i >= 14 && i < 18) return '#0F766E';  // Afternoon - teal (accent)
+                        return '#9B8AA5';                          // Evening/night - muted mauve
                     }}),
-                    line: {{ color: 'rgba(255,255,255,0.6)', width: 0.5 }}
+                    line: {{ color: 'rgba(255,255,255,0.8)', width: 1 }}
                 }},
                 hovertemplate: '<b>%{{x}}</b><br>%{{y}} speeches<extra></extra>'
             }}], {{
-                title: {{ text: 'Time of Day', font: {{ size: 14, color: '#0F172A' }} }},
+                title: {{ text: 'Time of Day', font: {{ size: 14, color: '#111827' }} }},
                 xaxis: {{
                     title: '',
-                    tickfont: {{ size: 9, color: '#64748b' }},
+                    tickfont: {{ size: 9, color: '#6B7280' }},
                     tickangle: -45,
                     dtick: 2,
                     gridcolor: 'rgba(0,0,0,0)'
                 }},
                 yaxis: {{
                     title: '',
-                    tickfont: {{ size: 10, color: '#475569' }},
-                    gridcolor: '#E2E8F0',
+                    tickfont: {{ size: 10, color: '#4B5563' }},
+                    gridcolor: '#E7E1D8',
                     zeroline: false
                 }},
                 height: 320,
@@ -1906,7 +1920,7 @@ html_content = f"""
                 annotations: [{{
                     x: 0.5, y: 1.1, xref: 'paper', yref: 'paper',
                     text: speechesWithTime.toLocaleString() + ' speeches · Eastern Time',
-                    showarrow: false, font: {{ size: 9, color: '#94a3b8' }}, xanchor: 'center'
+                    showarrow: false, font: {{ size: 9, color: '#9CA3AF' }}, xanchor: 'center'
                 }}]
             }}, {{ responsive: true }});
         }}
@@ -1918,14 +1932,14 @@ html_content = f"""
             type: 'bar',
             orientation: 'h',
             marker: {{
-                color: '#3B82F6',
+                color: '#0F766E',
                 line: {{ color: 'rgba(255,255,255,0.5)', width: 1 }}
             }},
             hovertemplate: '<b>%{{y}}</b><br>%{{x}} speeches<extra></extra>'
         }}], {{
-            title: {{ text: 'Most Frequent Speakers', font: {{ size: 14, color: '#0F172A' }} }},
-            xaxis: {{ title: '', tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
-            yaxis: {{ automargin: true, tickfont: {{ size: 10, color: '#475569' }}, ticksuffix: '  —  ' }},
+            title: {{ text: 'Most Frequent Speakers', font: {{ size: 14, color: '#111827' }} }},
+            xaxis: {{ title: '', tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: '#E7E1D8', zeroline: false }},
+            yaxis: {{ automargin: true, tickfont: {{ size: 10, color: '#4B5563' }}, ticksuffix: '  —  ' }},
             height: 380,
             margin: {{ l: 130, r: 20, t: 40, b: 25 }},
             plot_bgcolor: 'rgba(0,0,0,0)',
@@ -1940,14 +1954,14 @@ html_content = f"""
             type: 'bar',
             orientation: 'h',
             marker: {{
-                color: '#3B82F6',
+                color: '#0F766E',
                 line: {{ color: 'rgba(255,255,255,0.5)', width: 1 }}
             }},
             hovertemplate: '<b>%{{y}}</b><br>%{{x:,}} avg words<extra></extra>'
         }}], {{
-            title: {{ text: 'Longest Speeches (avg words)', font: {{ size: 14, color: '#0F172A' }} }},
-            xaxis: {{ title: '', tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
-            yaxis: {{ automargin: true, tickfont: {{ size: 10, color: '#475569' }}, ticksuffix: '  —  ' }},
+            title: {{ text: 'Longest Speeches (avg words)', font: {{ size: 14, color: '#111827' }} }},
+            xaxis: {{ title: '', tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: '#E7E1D8', zeroline: false }},
+            yaxis: {{ automargin: true, tickfont: {{ size: 10, color: '#4B5563' }}, ticksuffix: '  —  ' }},
             height: 380,
             margin: {{ l: 130, r: 20, t: 40, b: 25 }},
             plot_bgcolor: 'rgba(0,0,0,0)',
@@ -1962,14 +1976,14 @@ html_content = f"""
             type: 'bar',
             orientation: 'h',
             marker: {{
-                color: '#3B82F6',
+                color: '#0F766E',
                 line: {{ color: 'rgba(255,255,255,0.5)', width: 1 }}
             }},
             hovertemplate: '<b>%{{y}}</b><br>%{{x:,}} speeches<extra></extra>'
         }}], {{
-            title: {{ text: 'Speeches by Role', font: {{ size: 14, color: '#0F172A' }} }},
-            xaxis: {{ title: '', tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
-            yaxis: {{ automargin: true, tickfont: {{ size: 11, color: '#475569' }} }},
+            title: {{ text: 'Speeches by Role', font: {{ size: 14, color: '#111827' }} }},
+            xaxis: {{ title: '', tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: '#E7E1D8', zeroline: false }},
+            yaxis: {{ automargin: true, tickfont: {{ size: 11, color: '#4B5563' }} }},
             height: 380,
             margin: {{ l: 200, r: 30, t: 40, b: 30 }},
             plot_bgcolor: 'rgba(0,0,0,0)',
@@ -1980,11 +1994,11 @@ html_content = f"""
         // Chart: Roles Over Time - cleaner color palette
         // Colorblind-safe palette for role stacked area
         const roleColors = {{
-            'President': '#2563EB',
-            'Governor': '#14B8A6',
-            'Chair': '#DC2626',
-            'Vice Chair/Governor': '#7C3AED',
-            'Governor/Vice Chair': '#8B5CF6',
+            'President': '#0F766E',
+            'Governor': '#7C9885',
+            'Chair': '#B8A58B',
+            'Vice Chair/Governor': '#9B8AA5',
+            'Governor/Vice Chair': '#8DAAB8',
             'Governor/Vice Chair for Supervision': '#F59E0B',
             'Executive Vice President': '#64748B',
             'First Vice President': '#94A3B8',
@@ -2009,14 +2023,14 @@ html_content = f"""
             mode: 'lines',
             stackgroup: 'one',
             line: {{ width: 0.5, color: 'rgba(255,255,255,0.4)' }},
-            fillcolor: roleColors[role] || '#94a3b8',
+            fillcolor: roleColors[role] || '#D1CBC2',
             hovertemplate: '<b>' + role + '</b><br>%{{y:.1f}}%<extra></extra>'
         }}));
 
         Plotly.newPlot('chart-roles-time', roleTraces, {{
-            title: {{ text: 'Role Mix Over Time', font: {{ size: 14, color: '#0F172A' }} }},
-            xaxis: {{ title: '', dtick: 5, tickfont: {{ size: 10, color: '#475569' }}, gridcolor: 'rgba(0,0,0,0)', zeroline: false, range: [roleYears[0] - 0.5, roleYears[roleYears.length-1] + 0.5] }},
-            yaxis: {{ title: '', ticksuffix: '%', range: [0, 100], tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
+            title: {{ text: 'Role Mix Over Time', font: {{ size: 14, color: '#111827' }} }},
+            xaxis: {{ title: '', dtick: 5, tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: 'rgba(0,0,0,0)', zeroline: false, range: [roleYears[0] - 0.5, roleYears[roleYears.length-1] + 0.5] }},
+            yaxis: {{ title: '', ticksuffix: '%', range: [0, 100], tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: '#E7E1D8', zeroline: false }},
             height: 380,
             margin: {{ l: 45, r: 30, t: 40, b: 90 }},
             plot_bgcolor: 'rgba(0,0,0,0)',
@@ -2027,7 +2041,7 @@ html_content = f"""
                 y: -0.25,
                 x: 0.5,
                 xanchor: 'center',
-                font: {{ size: 10, color: '#475569' }},
+                font: {{ size: 10, color: '#4B5563' }},
                 bgcolor: 'rgba(255,255,255,0.8)',
                 borderwidth: 0
             }}
@@ -2052,16 +2066,16 @@ html_content = f"""
                 ygap: 2,
                 hovertemplate: '<b>%{{y}}</b><br>%{{x}}: %{{z:.1f}}%<extra></extra>',
                 colorbar: {{
-                    title: {{ text: '%', font: {{ size: 11, color: '#64748b' }} }},
+                    title: {{ text: '%', font: {{ size: 11, color: '#6B7280' }} }},
                     thickness: 12,
                     len: 0.8,
-                    tickfont: {{ size: 10, color: '#475569' }},
+                    tickfont: {{ size: 10, color: '#4B5563' }},
                     outlinewidth: 0
                 }}
             }}], {{
-                title: {{ text: 'Speaker Topic Focus', font: {{ size: 14, color: '#0F172A' }} }},
-                xaxis: {{ title: '', tickangle: -45, tickfont: {{ size: 11, color: '#64748b' }}, automargin: true, gridcolor: 'rgba(0,0,0,0)' }},
-                yaxis: {{ title: '', automargin: true, tickfont: {{ size: 10, color: '#475569' }}, gridcolor: 'rgba(0,0,0,0)' }},
+                title: {{ text: 'Speaker Topic Focus', font: {{ size: 14, color: '#111827' }} }},
+                xaxis: {{ title: '', tickangle: -45, tickfont: {{ size: 11, color: '#6B7280' }}, automargin: true, gridcolor: 'rgba(0,0,0,0)' }},
+                yaxis: {{ title: '', automargin: true, tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: 'rgba(0,0,0,0)' }},
                 height: 480,
                 margin: {{ l: 120, r: 60, t: 50, b: 180 }},
                 plot_bgcolor: 'rgba(0,0,0,0)',
@@ -2069,7 +2083,7 @@ html_content = f"""
                 annotations: [{{
                     x: 0.5, y: 1.08, xref: 'paper', yref: 'paper',
                     text: 'Avg topic probability per speaker (top 12 by speech count)',
-                    showarrow: false, font: {{ size: 10, color: '#94a3b8' }}, xanchor: 'center'
+                    showarrow: false, font: {{ size: 10, color: '#9CA3AF' }}, xanchor: 'center'
                 }}]
             }}, {{ responsive: true }});
         }}
@@ -2080,26 +2094,26 @@ html_content = f"""
             type: 'histogram',
             nbinsx: 30,
             marker: {{
-                color: '#3B82F6',
-                line: {{ color: 'rgba(255,255,255,0.5)', width: 0.5 }}
+                color: '#B8A58B',
+                line: {{ color: 'rgba(255,255,255,0.8)', width: 1 }}
             }},
             hovertemplate: '<b>%{{x:,.0f}} words</b><br>%{{y}} speeches<extra></extra>'
         }}], {{
-            title: {{ text: 'Distribution of Speech Lengths', font: {{ size: 14, color: '#0F172A' }} }},
+            title: {{ text: 'Distribution of Speech Lengths', font: {{ size: 14, color: '#111827' }} }},
             xaxis: {{
                 title: '',
                 range: [-200, 7200],
                 dtick: 1000,
-                tickfont: {{ size: 10, color: '#475569' }},
-                gridcolor: '#E2E8F0',
+                tickfont: {{ size: 10, color: '#4B5563' }},
+                gridcolor: '#E7E1D8',
                 zeroline: false,
                 tickformat: ',d',
                 tickvals: [0, 1000, 2000, 3000, 4000, 5000, 6000, 7000]
             }},
             yaxis: {{
                 title: '',
-                tickfont: {{ size: 10, color: '#475569' }},
-                gridcolor: '#E2E8F0',
+                tickfont: {{ size: 10, color: '#4B5563' }},
+                gridcolor: '#E7E1D8',
                 zeroline: false,
                 rangemode: 'tozero'
             }},
@@ -2111,7 +2125,7 @@ html_content = f"""
             annotations: [{{
                 x: 0.98, y: 0.95, xref: 'paper', yref: 'paper',
                 text: 'excludes ' + wordCounts.filter(w => w > 7000).length + ' speeches >7k',
-                showarrow: false, font: {{ size: 9, color: '#94a3b8' }}, xanchor: 'right'
+                showarrow: false, font: {{ size: 9, color: '#9CA3AF' }}, xanchor: 'right'
             }}]
         }}, {{ responsive: true }});
 
@@ -2123,14 +2137,14 @@ html_content = f"""
                 y: readabilityScores,
                 type: 'scatter',
                 mode: 'lines+markers',
-                line: {{ color: '#3B82F6', width: 2.5, shape: 'spline' }},
-                marker: {{ size: 5, color: '#3B82F6' }},
+                line: {{ color: '#0F766E', width: 2.5, shape: 'spline' }},
+                marker: {{ size: 5, color: '#0F766E' }},
                 connectgaps: true,
                 hovertemplate: '<b>%{{x}}</b><br>Fog Index: %{{y:.1f}}<extra></extra>'
             }}], {{
-                title: {{ text: 'Readability Over Time (Gunning Fog Index)', font: {{ size: 14, color: '#0F172A' }} }},
-                xaxis: {{ title: '', dtick: 5, range: [1997, 2026], tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
-                yaxis: {{ title: '', range: [16.5, 20], tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
+                title: {{ text: 'Readability Over Time (Gunning Fog Index)', font: {{ size: 14, color: '#111827' }} }},
+                xaxis: {{ title: '', dtick: 5, range: [1997, 2026], tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: '#E7E1D8', zeroline: false }},
+                yaxis: {{ title: '', range: [16.5, 20], tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: '#E7E1D8', zeroline: false }},
                 height: 280,
                 margin: {{ l: 45, r: 20, t: 55, b: 35 }},
                 plot_bgcolor: 'rgba(0,0,0,0)',
@@ -2138,7 +2152,7 @@ html_content = f"""
                 annotations: [{{
                     x: 0.5, y: 1.15, xref: 'paper', yref: 'paper',
                     text: 'Score ≈ years of education needed to understand',
-                    showarrow: false, font: {{ size: 9, color: '#94a3b8' }}, xanchor: 'center'
+                    showarrow: false, font: {{ size: 9, color: '#9CA3AF' }}, xanchor: 'center'
                 }}, {{
                     x: 0.98, y: 0.95, xref: 'paper', yref: 'paper',
                     text: 'Higher = harder',
@@ -2153,22 +2167,22 @@ html_content = f"""
                     y: sentimentScores,
                     type: 'scatter',
                     mode: 'lines+markers',
-                    line: {{ color: '#475569', width: 2.5, shape: 'spline' }},
-                    marker: {{ size: 5, color: '#475569' }},
+                    line: {{ color: '#4B5563', width: 2.5, shape: 'spline' }},
+                    marker: {{ size: 5, color: '#4B5563' }},
                     fill: 'tozeroy',
-                    fillcolor: 'rgba(71, 85, 105, 0.1)',
+                    fillcolor: 'rgba(75, 85, 99, 0.1)',
                     connectgaps: true,
                     hovertemplate: '<b>%{{x}}</b><br>Score: %{{y:.3f}}<extra></extra>'
                 }}], {{
-                    title: {{ text: 'Hawkish vs Dovish Sentiment (FinBERT-FOMC)', font: {{ size: 14, color: '#0F172A' }} }},
-                    xaxis: {{ title: '', dtick: 5, range: [1995, 2026], tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
-                    yaxis: {{ title: '', zeroline: true, zerolinecolor: '#cbd5e1', zerolinewidth: 1, range: [-0.35, 0.15], tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0' }},
+                    title: {{ text: 'Hawkish vs Dovish Sentiment (FinBERT-FOMC)', font: {{ size: 14, color: '#111827' }} }},
+                    xaxis: {{ title: '', dtick: 5, range: [1995, 2026], tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: '#E7E1D8', zeroline: false }},
+                    yaxis: {{ title: '', zeroline: true, zerolinecolor: '#D1CBC2', zerolinewidth: 1, range: [-0.35, 0.15], tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: '#E7E1D8' }},
                     height: 280,
                     margin: {{ l: 45, r: 20, t: 55, b: 35 }},
                     plot_bgcolor: 'rgba(0,0,0,0)',
                     paper_bgcolor: 'rgba(0,0,0,0)',
                     annotations: [
-                        {{ x: 0.5, y: 1.15, xref: 'paper', yref: 'paper', text: 'Score = avg(+1 hawkish, -1 dovish, 0 neutral)', showarrow: false, font: {{ size: 9, color: '#94a3b8' }}, xanchor: 'center' }},
+                        {{ x: 0.5, y: 1.15, xref: 'paper', yref: 'paper', text: 'Score = avg(+1 hawkish, -1 dovish, 0 neutral)', showarrow: false, font: {{ size: 9, color: '#9CA3AF' }}, xanchor: 'center' }},
                         {{ x: 0.98, y: 0.95, xref: 'paper', yref: 'paper', text: '↑ Hawkish', showarrow: false, font: {{ size: 9, color: '#10b981' }}, xanchor: 'right' }},
                         {{ x: 0.98, y: 0.08, xref: 'paper', yref: 'paper', text: '↓ Dovish', showarrow: false, font: {{ size: 9, color: '#f43f5e' }}, xanchor: 'right' }}
                     ]
@@ -2181,16 +2195,16 @@ html_content = f"""
                 y: uncertaintyScores,
                 type: 'scatter',
                 mode: 'lines+markers',
-                line: {{ color: '#3B82F6', width: 2.5, shape: 'spline' }},
-                marker: {{ size: 5, color: '#3B82F6' }},
+                line: {{ color: '#0F766E', width: 2.5, shape: 'spline' }},
+                marker: {{ size: 5, color: '#0F766E' }},
                 fill: 'tozeroy',
-                fillcolor: 'rgba(59, 130, 246, 0.12)',
+                fillcolor: 'rgba(15, 118, 110, 0.12)',
                 connectgaps: true,
                 hovertemplate: '<b>%{{x}}</b><br>%{{y:.1f}} hedging words/1000<extra></extra>'
             }}], {{
-                title: {{ text: 'Uncertainty Index Over Time', font: {{ size: 14, color: '#0F172A' }} }},
-                xaxis: {{ title: '', dtick: 5, range: [1997, 2026], tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
-                yaxis: {{ title: '', range: [14, 24], tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
+                title: {{ text: 'Uncertainty Index Over Time', font: {{ size: 14, color: '#111827' }} }},
+                xaxis: {{ title: '', dtick: 5, range: [1997, 2026], tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: '#E7E1D8', zeroline: false }},
+                yaxis: {{ title: '', range: [14, 24], tickfont: {{ size: 10, color: '#4B5563' }}, gridcolor: '#E7E1D8', zeroline: false }},
                 height: 280,
                 margin: {{ l: 45, r: 20, t: 55, b: 35 }},
                 plot_bgcolor: 'rgba(0,0,0,0)',
@@ -2198,22 +2212,22 @@ html_content = f"""
                 annotations: [{{
                     x: 0.5, y: 1.15, xref: 'paper', yref: 'paper',
                     text: 'Hedging words per 1000 (may, could, uncertain, risk, likely...)',
-                    showarrow: false, font: {{ size: 9, color: '#94a3b8' }}, xanchor: 'center'
+                    showarrow: false, font: {{ size: 9, color: '#9CA3AF' }}, xanchor: 'center'
                 }}]
             }}, {{ responsive: true }});
         }}
 
         // Chart 9: LDA Topics Over Time - Redesigned per spec
         if (ldaAvailable) {{
-            // Soft pastel palette
+            // Muted editorial palette (teal accent + warm neutrals)
             const topicColors = [
-                '#93C5FD',  // Pastel blue
-                '#6EE7B7',  // Pastel mint
-                '#FCD34D',  // Pastel yellow
-                '#C4B5FD',  // Pastel lavender
-                '#FDA4AF',  // Pastel pink
-                '#A5F3FC',  // Pastel cyan
-                '#D1D5DB'   // Light gray (for "Other")
+                '#0F766E',  // Teal (primary accent)
+                '#B8A58B',  // Warm tan
+                '#7C9885',  // Sage green
+                '#9B8AA5',  // Muted lavender
+                '#C4A77D',  // Golden wheat
+                '#8DAAB8',  // Dusty blue
+                '#D1CBC2'   // Warm gray (for "Other")
             ];
 
             // Calculate average share for each topic to sort by importance
@@ -2304,7 +2318,7 @@ html_content = f"""
                         ticksuffix: '%',
                         range: [0, topicChartMode === 'stacked' ? 100 : undefined],
                         tickfont: {{ size: 11, color: '#64748B' }},
-                        gridcolor: '#E2E8F0',
+                        gridcolor: '#E7E1D8',
                         zeroline: false,
                         dtick: topicChartMode === 'stacked' ? 25 : undefined
                     }},
@@ -2316,7 +2330,7 @@ html_content = f"""
                     hoverlabel: {{
                         bgcolor: 'white',
                         bordercolor: '#E2E8F0',
-                        font: {{ family: '-apple-system, BlinkMacSystemFont, sans-serif', size: 12, color: '#0F172A' }},
+                        font: {{ family: '-apple-system, BlinkMacSystemFont, sans-serif', size: 12, color: '#111827' }},
                         namelength: -1
                     }},
                     showlegend: false
