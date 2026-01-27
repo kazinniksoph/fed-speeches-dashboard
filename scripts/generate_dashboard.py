@@ -173,6 +173,10 @@ else:
 unique_banks = sorted([b for b in df['fed_bank'].dropna().unique() if b and str(b) != 'nan'])
 bank_options_html = '<option value="all">All Banks</option>\n' + '\n'.join([f'                    <option value="{b}">{b}</option>' for b in unique_banks])
 
+# Get unique roles for filter dropdown
+unique_roles = sorted([r for r in df['fed_role'].dropna().unique() if r and str(r) != 'nan'])
+role_options_html = '<option value="all">All Roles</option>\n' + '\n'.join([f'                    <option value="{r}">{r}</option>' for r in unique_roles])
+
 print(f"Loaded {len(df)} total speeches")
 print(f"Speeches with LDA topics: {df['has_lda_topic'].sum()}")
 print(f"Speeches without LDA topics: {(~df['has_lda_topic']).sum()}")
@@ -192,6 +196,10 @@ df['year'] = df['parsed_date'].dt.year
 df['month'] = df['parsed_date'].dt.month
 df['text_length'] = df['text'].str.len()
 df['word_count'] = df['text'].str.split().str.len()
+
+# Get unique years for filter dropdown (after year column is created)
+unique_years = sorted([int(y) for y in df['year'].dropna().unique() if pd.notna(y)])
+year_options_html = '<option value="all">All Years</option>\n' + '\n'.join([f'                    <option value="{y}">{y}</option>' for y in unique_years])
 
 # === Summary Statistics ===
 total_speeches = len(df)
@@ -1465,6 +1473,12 @@ html_content = f"""
                 <select id="bankFilter" class="lda-filter" onchange="filterSpeeches()">
                     {bank_options_html}
                 </select>
+                <select id="roleFilter" class="lda-filter" onchange="filterSpeeches()">
+                    {role_options_html}
+                </select>
+                <select id="yearFilter" class="lda-filter" onchange="filterSpeeches()">
+                    {year_options_html}
+                </select>
                 <button class="clear-filter-btn" onclick="clearSpeechFilter()" id="clearFilterBtn" style="display:none;">Clear Filter</button>
                 <span class="speech-count" id="speechCount"></span>
             </div>
@@ -2185,6 +2199,8 @@ html_content = f"""
             const query = document.getElementById('speechSearchInput').value.toLowerCase();
             const ldaFilter = document.getElementById('ldaFilter').value;
             const bankFilter = document.getElementById('bankFilter').value;
+            const roleFilter = document.getElementById('roleFilter').value;
+            const yearFilter = document.getElementById('yearFilter').value;
             let results = currentFilter ? filteredSpeeches : allSpeeches;
 
             // Apply LDA filter
@@ -2197,6 +2213,16 @@ html_content = f"""
             // Apply bank filter
             if (bankFilter !== 'all') {{
                 results = results.filter(s => s.bank === bankFilter);
+            }}
+
+            // Apply role filter
+            if (roleFilter !== 'all') {{
+                results = results.filter(s => s.role === roleFilter);
+            }}
+
+            // Apply year filter
+            if (yearFilter !== 'all') {{
+                results = results.filter(s => s.year === parseInt(yearFilter));
             }}
 
             // Apply search filter
@@ -2259,6 +2285,8 @@ html_content = f"""
             document.getElementById('speechSearchInput').value = '';
             document.getElementById('ldaFilter').value = 'all';
             document.getElementById('bankFilter').value = 'all';
+            document.getElementById('roleFilter').value = 'all';
+            document.getElementById('yearFilter').value = 'all';
             document.getElementById('globalBankFilter').value = 'all';
             document.getElementById('globalLdaFilter').value = 'all';
             document.getElementById('globalSearchInput').value = '';
