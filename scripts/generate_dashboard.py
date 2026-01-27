@@ -517,6 +517,27 @@ html_content = f"""
     <title>Federal Reserve Speeches Dashboard</title>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <style>
+        /* === Design System === */
+        :root {{
+            --bg-page: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --border-color: #E2E8F0;
+            --text-primary: #0F172A;
+            --text-muted: #475569;
+            --text-light: #94A3B8;
+            --accent-primary: #2563EB;
+            --accent-secondary: #14B8A6;
+            --accent-success: #16A34A;
+            --accent-warning: #F59E0B;
+            --accent-danger: #DC2626;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-lg: 0 4px 16px rgba(0,0,0,0.08);
+        }}
+
         * {{
             margin: 0;
             padding: 0;
@@ -525,8 +546,8 @@ html_content = f"""
 
         body {{
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, #fefefe 0%, #f8fafc 50%, #f0f9ff 100%);
-            color: #475569;
+            background: var(--bg-page);
+            color: var(--text-muted);
             line-height: 1.6;
             min-height: 100vh;
         }}
@@ -534,32 +555,70 @@ html_content = f"""
         .container {{
             max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1.5rem 2rem;
         }}
 
+        /* === Header === */
         header {{
-            text-align: center;
-            padding: 0.5rem 0;
-            background: linear-gradient(135deg, #0c4a6e 0%, #075985 50%, #0369a1 100%);
-            color: white;
-            margin-bottom: 0.75rem;
-            border-radius: 0 0 0.75rem 0.75rem;
-            box-shadow: 0 2px 10px rgba(12, 74, 110, 0.2);
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            margin-bottom: 0;
+        }}
+
+        header .container {{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            gap: 2rem;
+        }}
+
+        .header-left {{
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
         }}
 
         h1 {{
-            font-size: 1rem;
+            font-size: 1.25rem;
             font-weight: 600;
-            margin-bottom: 0;
+            color: var(--text-primary);
             letter-spacing: -0.3px;
         }}
 
         .subtitle {{
-            font-size: 0.65rem;
-            opacity: 0.85;
+            font-size: 0.75rem;
+            color: var(--text-light);
             font-weight: 400;
         }}
 
+        .header-stats {{
+            display: flex;
+            gap: 1.5rem;
+        }}
+
+        .header-stat {{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.1rem;
+        }}
+
+        .header-stat-value {{
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }}
+
+        .header-stat-label {{
+            font-size: 0.65rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }}
+
+        /* === KPI Cards === */
         .stats-grid {{
             display: flex;
             justify-content: center;
@@ -569,40 +628,39 @@ html_content = f"""
         }}
 
         .stat-card {{
-            background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
-            padding: 0.85rem 1.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.1);
+            background: var(--bg-card);
+            padding: 1rem 1.75rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.15rem;
-            border: 1px solid rgba(14, 165, 233, 0.15);
+            gap: 0.25rem;
+            border: 1px solid var(--border-color);
             transition: transform 0.2s, box-shadow 0.2s;
         }}
 
         .stat-card:hover {{
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.2);
+            box-shadow: var(--shadow-md);
         }}
 
         .stat-value {{
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #0ea5e9, #38bdf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-primary);
         }}
 
         .stat-label {{
-            font-size: 0.65rem;
-            color: #8b8ba7;
+            font-size: 0.7rem;
+            color: var(--text-light);
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
+            font-weight: 500;
         }}
 
+        /* === Chart Grid === */
         .chart-grid {{
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -611,49 +669,59 @@ html_content = f"""
         }}
 
         .chart-card {{
-            background: linear-gradient(135deg, #ffffff 0%, #fafeff 100%);
-            border-radius: 1.25rem;
-            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.08);
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
             padding: 0.75rem;
             overflow: hidden;
-            border: 1px solid rgba(14, 165, 233, 0.1);
+            border: 1px solid var(--border-color);
             transition: transform 0.2s, box-shadow 0.2s;
         }}
 
         .chart-card:hover {{
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.12);
+            box-shadow: var(--shadow-md);
         }}
 
         .chart-card.full-width {{
             grid-column: 1 / -1;
         }}
 
+        /* === Section Accordions === */
         .section-title {{
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
-            color: #0284c7;
-            margin: 1.5rem 0 0.75rem;
-            padding: 0.6rem 1rem;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            border-radius: 1rem;
+            color: var(--text-primary);
+            margin: 1.25rem 0 0.75rem;
+            padding: 0.75rem 1rem;
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
             cursor: pointer;
             user-select: none;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid rgba(14, 165, 233, 0.15);
+            border: 1px solid var(--border-color);
+            border-left: 3px solid transparent;
             transition: all 0.2s;
         }}
 
         .section-title:hover {{
-            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-            border-color: rgba(14, 165, 233, 0.25);
+            background: #F1F5F9;
+        }}
+
+        .section-title:not(.collapsed) {{
+            border-left-color: var(--accent-primary);
+        }}
+
+        .section-title .section-icon {{
+            margin-right: 0.5rem;
+            opacity: 0.7;
         }}
 
         .section-title .toggle-icon {{
             font-size: 0.7rem;
-            color: #38bdf8;
+            color: var(--text-light);
             transition: transform 0.2s;
         }}
 
@@ -671,44 +739,45 @@ html_content = f"""
             opacity: 0;
         }}
 
+        /* === Table Styles === */
         .table-container {{
-            background: linear-gradient(135deg, #ffffff 0%, #fafeff 100%);
-            border-radius: 1.25rem;
-            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.08);
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
             overflow: hidden;
             margin-bottom: 2rem;
-            border: 1px solid rgba(14, 165, 233, 0.1);
+            border: 1px solid var(--border-color);
         }}
 
         .table-header {{
             padding: 0.85rem 1.25rem;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            border-bottom: 1px solid rgba(14, 165, 233, 0.12);
+            background: var(--bg-page);
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }}
 
         .table-title {{
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #0284c7;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
         }}
 
         .search-box {{
             padding: 0.5rem 1rem;
-            border: 1px solid rgba(14, 165, 233, 0.25);
-            border-radius: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
             font-size: 0.9rem;
             width: 250px;
             outline: none;
             transition: all 0.2s;
-            background: white;
+            background: var(--bg-card);
         }}
 
         .search-box:focus {{
-            border-color: #38bdf8;
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }}
 
         .data-table {{
@@ -717,31 +786,32 @@ html_content = f"""
         }}
 
         .data-table th {{
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            padding: 1rem;
+            background: var(--bg-page);
+            padding: 0.85rem 1rem;
             text-align: left;
             font-weight: 600;
-            color: #64748b;
-            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            border-bottom: 2px solid rgba(14, 165, 233, 0.15);
+            border-bottom: 1px solid var(--border-color);
             cursor: pointer;
             user-select: none;
         }}
 
         .data-table th:hover {{
-            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            background: #F1F5F9;
         }}
 
         .data-table td {{
-            padding: 1rem;
-            border-bottom: 1px solid rgba(14, 165, 233, 0.08);
-            color: #64748b;
+            padding: 0.85rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.9rem;
         }}
 
         .data-table tbody tr:hover {{
-            background: linear-gradient(135deg, #fafeff 0%, #f0f9ff 100%);
+            background: #F8FAFC;
         }}
 
         .data-table tbody tr:last-child td {{
@@ -750,11 +820,165 @@ html_content = f"""
 
         footer {{
             text-align: center;
-            padding: 1rem;
-            color: #a0aec0;
+            padding: 2rem 1rem;
+            color: var(--text-light);
             font-size: 0.75rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 2rem;
         }}
 
+        /* === Topic Chart Module === */
+        .topic-chart-container {{
+            padding: 1.25rem;
+        }}
+
+        .topic-chart-header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }}
+
+        .topic-chart-title {{
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }}
+
+        .chart-title-text {{
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }}
+
+        .chart-subtitle-text {{
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }}
+
+        .topic-chart-controls {{
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }}
+
+        .toggle-group {{
+            display: flex;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }}
+
+        .toggle-btn {{
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
+            border: none;
+            background: var(--bg-card);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.15s;
+        }}
+
+        .toggle-btn:not(:last-child) {{
+            border-right: 1px solid var(--border-color);
+        }}
+
+        .toggle-btn:hover {{
+            background: var(--bg-page);
+        }}
+
+        .toggle-btn.active {{
+            background: var(--accent-primary);
+            color: white;
+        }}
+
+        .topic-n-select {{
+            padding: 0.4rem 0.6rem;
+            font-size: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            color: var(--text-muted);
+            cursor: pointer;
+        }}
+
+        .topic-chart-body {{
+            display: flex;
+            gap: 1rem;
+        }}
+
+        .topic-chart-plot {{
+            flex: 1;
+            min-width: 0;
+        }}
+
+        .topic-chart-legend {{
+            width: 220px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding-top: 2rem;
+        }}
+
+        .legend-item {{
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.5rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.15s;
+        }}
+
+        .legend-item:hover {{
+            background: var(--bg-page);
+        }}
+
+        .legend-item.dimmed {{
+            opacity: 0.3;
+        }}
+
+        .legend-item.highlighted {{
+            background: var(--bg-page);
+        }}
+
+        .legend-swatch {{
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }}
+
+        .legend-label {{
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            flex: 1;
+        }}
+
+        .legend-value {{
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }}
+
+        @media (max-width: 900px) {{
+            .topic-chart-body {{
+                flex-direction: column;
+            }}
+            .topic-chart-legend {{
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                padding-top: 0;
+            }}
+            .legend-item {{
+                flex: 0 0 auto;
+            }}
+        }}
+
+        /* === Topic Cards === */
         .topic-grid {{
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -763,47 +987,60 @@ html_content = f"""
         }}
 
         .topic-card {{
-            background: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
             padding: 1rem;
-            border-left: 4px solid #5a9bd4;
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--accent-primary);
+            transition: all 0.2s;
+        }}
+
+        .topic-card:hover {{
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }}
 
         .topic-card h3 {{
             font-size: 0.9rem;
             font-weight: 600;
-            color: #1a365d;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
         }}
 
         .topic-words {{
             display: flex;
             flex-wrap: wrap;
-            gap: 0.3rem;
+            gap: 0.35rem;
         }}
 
         .topic-word {{
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            color: #64748b;
+            background: var(--bg-page);
+            color: var(--text-muted);
             padding: 0.25rem 0.6rem;
-            border-radius: 0.5rem;
+            border-radius: var(--radius-sm);
             font-size: 0.75rem;
+            border: 1px solid var(--border-color);
         }}
 
         .topic-word.primary {{
-            background: linear-gradient(135deg, #bae6fd 0%, #7dd3fc 100%);
-            color: #0369a1;
+            background: #EFF6FF;
+            color: var(--accent-primary);
             font-weight: 500;
+            border-color: #BFDBFE;
         }}
 
-        /* Speech Explorer Styles */
+        /* === Speech Explorer === */
         .explorer-controls {{
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
             margin-bottom: 1rem;
             flex-wrap: wrap;
+            background: var(--bg-card);
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
         }}
 
         .explorer-controls .search-box {{
@@ -812,40 +1049,41 @@ html_content = f"""
         }}
 
         .lda-filter {{
-            padding: 0.5rem 1rem;
-            border: 1px solid rgba(14, 165, 233, 0.25);
-            border-radius: 0.75rem;
-            background: white;
-            font-size: 0.9rem;
+            padding: 0.5rem 0.85rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.2s;
+            color: var(--text-muted);
         }}
 
         .lda-filter:focus {{
             outline: none;
-            border-color: #38bdf8;
-            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }}
 
         .clear-filter-btn {{
             padding: 0.5rem 1rem;
-            background: linear-gradient(135deg, #fb7185 0%, #f43f5e 100%);
+            background: var(--accent-primary);
             color: white;
             border: none;
-            border-radius: 0.75rem;
+            border-radius: var(--radius-sm);
             cursor: pointer;
             font-size: 0.85rem;
+            font-weight: 500;
             transition: all 0.2s;
-            box-shadow: 0 2px 8px rgba(244, 63, 94, 0.25);
         }}
 
         .clear-filter-btn:hover {{
-            background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+            background: #1D4ED8;
             transform: translateY(-1px);
         }}
 
         .filter-badge {{
-            background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+            background: var(--accent-primary);
             color: white;
             padding: 0.2rem 0.6rem;
             border-radius: 1rem;
@@ -854,7 +1092,7 @@ html_content = f"""
         }}
 
         .speech-count {{
-            color: #94a3b8;
+            color: var(--text-light);
             font-size: 0.85rem;
         }}
 
@@ -867,20 +1105,19 @@ html_content = f"""
         }}
 
         .speech-item {{
-            background: linear-gradient(135deg, #ffffff 0%, #fafeff 100%);
-            border-radius: 1rem;
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
             padding: 1rem;
-            box-shadow: 0 2px 10px rgba(14, 165, 233, 0.08);
+            box-shadow: var(--shadow-sm);
             cursor: pointer;
             transition: all 0.2s;
-            border: 1px solid rgba(14, 165, 233, 0.1);
-            border-left: 4px solid #7dd3fc;
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--accent-primary);
         }}
 
         .speech-item:hover {{
-            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.15);
+            box-shadow: var(--shadow-md);
             transform: translateY(-2px);
-            border-color: rgba(14, 165, 233, 0.2);
         }}
 
         .speech-item-header {{
@@ -892,58 +1129,63 @@ html_content = f"""
 
         .speech-item-speaker {{
             font-weight: 600;
-            color: #0369a1;
+            color: var(--text-primary);
             font-size: 0.95rem;
         }}
 
         .speech-item-date {{
-            color: #94a3b8;
+            color: var(--text-light);
             font-size: 0.8rem;
         }}
 
         .speech-item-meta {{
             display: flex;
-            gap: 0.5rem;
+            gap: 0.4rem;
             margin-bottom: 0.5rem;
             flex-wrap: wrap;
         }}
 
         .speech-item-tag {{
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            color: #64748b;
+            background: var(--bg-page);
+            color: var(--text-muted);
             padding: 0.2rem 0.6rem;
-            border-radius: 0.5rem;
-            font-size: 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.7rem;
+            border: 1px solid var(--border-color);
         }}
 
         .speech-item-tag.topic {{
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-            color: #065f46;
+            background: #ECFDF5;
+            color: #047857;
+            border-color: #A7F3D0;
         }}
 
         .speech-item-tag.bank {{
-            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
-            color: #3730a3;
+            background: #EFF6FF;
+            color: var(--accent-primary);
+            border-color: #BFDBFE;
         }}
 
         .speech-item-tag.time {{
-            background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
-            color: #9d174d;
+            background: #FDF4FF;
+            color: #A21CAF;
+            border-color: #F5D0FE;
         }}
 
         .speech-item-tag.no-lda {{
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            color: #92400e;
+            background: #FFFBEB;
+            color: #B45309;
+            border-color: #FDE68A;
             font-style: italic;
         }}
 
         .speech-item-snippet {{
-            color: #64748b;
+            color: var(--text-muted);
             font-size: 0.85rem;
             line-height: 1.5;
         }}
 
-        /* Modal Styles */
+        /* === Modal Styles === */
         .modal-overlay {{
             display: none;
             position: fixed;
@@ -951,7 +1193,7 @@ html_content = f"""
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(15, 23, 42, 0.3);
+            background: rgba(15, 23, 42, 0.4);
             backdrop-filter: blur(4px);
             z-index: 1000;
             justify-content: center;
@@ -964,27 +1206,27 @@ html_content = f"""
         }}
 
         .modal-content {{
-            background: linear-gradient(135deg, #ffffff 0%, #fafeff 100%);
-            border-radius: 1.5rem;
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
             max-width: 800px;
             width: 100%;
             max-height: 80vh;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 25px 60px rgba(14, 165, 233, 0.2);
-            border: 1px solid rgba(14, 165, 233, 0.15);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
         }}
 
         .modal-close {{
             position: absolute;
             top: 1rem;
             right: 1rem;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            border: none;
+            background: var(--bg-page);
+            border: 1px solid var(--border-color);
             font-size: 1.25rem;
             cursor: pointer;
-            color: #0284c7;
+            color: var(--text-muted);
             width: 2.25rem;
             height: 2.25rem;
             display: flex;
@@ -995,27 +1237,26 @@ html_content = f"""
         }}
 
         .modal-close:hover {{
-            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-            color: #0369a1;
-            transform: scale(1.05);
+            background: #F1F5F9;
+            color: var(--text-primary);
         }}
 
         .modal-header {{
             padding: 1.5rem;
-            border-bottom: 1px solid rgba(14, 165, 233, 0.12);
+            border-bottom: 1px solid var(--border-color);
             position: relative;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            background: var(--bg-page);
         }}
 
         .modal-header h3 {{
-            color: #0369a1;
+            color: var(--text-primary);
             font-size: 1.25rem;
             margin-bottom: 0.25rem;
             padding-right: 2rem;
         }}
 
         .modal-header p {{
-            color: #94a3b8;
+            color: var(--text-light);
             font-size: 0.9rem;
         }}
 
@@ -1025,7 +1266,7 @@ html_content = f"""
             flex: 1;
             font-size: 0.95rem;
             line-height: 1.8;
-            color: #475569;
+            color: var(--text-muted);
             white-space: pre-wrap;
         }}
 
@@ -1040,7 +1281,7 @@ html_content = f"""
             bottom: 0.5rem;
             right: 0.75rem;
             font-size: 0.7rem;
-            color: #7dd3fc;
+            color: var(--text-light);
             opacity: 0;
             transition: opacity 0.2s;
         }}
@@ -1049,59 +1290,54 @@ html_content = f"""
             opacity: 1;
         }}
 
-        /* Quick Navigation */
+        /* === Navigation Tabs === */
         .quick-nav {{
             display: flex;
             justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
+            gap: 0.25rem;
+            margin-bottom: 1.5rem;
             flex-wrap: wrap;
             position: sticky;
             top: 0;
             z-index: 100;
-            background: linear-gradient(135deg, rgba(254, 254, 254, 0.95) 0%, rgba(240, 249, 255, 0.95) 100%);
-            padding: 0.75rem;
-            border-radius: 1rem;
+            background: rgba(248, 250, 252, 0.95);
+            padding: 0.5rem 1rem;
             backdrop-filter: blur(10px);
-            box-shadow: 0 2px 10px rgba(14, 165, 233, 0.1);
+            border-bottom: 1px solid var(--border-color);
         }}
 
         .nav-link {{
-            padding: 0.4rem 0.8rem;
-            background: white;
-            border: 1px solid rgba(14, 165, 233, 0.2);
-            border-radius: 0.75rem;
-            color: #0284c7;
+            padding: 0.6rem 1rem;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-muted);
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 500;
             transition: all 0.2s;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 0.3rem;
+            gap: 0.4rem;
         }}
 
         .nav-link:hover {{
-            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-            border-color: #38bdf8;
-            transform: translateY(-1px);
+            color: var(--accent-primary);
+            border-bottom-color: var(--accent-primary);
         }}
 
         .nav-link .nav-icon {{
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            opacity: 0.8;
         }}
 
-        /* Key Insights Panel */
+        /* === Insights Panel === */
         .insights-panel {{
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-            border: 1px solid rgba(34, 197, 94, 0.2);
-            border-radius: 1rem;
-            padding: 1rem 1.25rem;
-            margin-bottom: 1.5rem;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1rem;
+            margin-bottom: 1.5rem;
         }}
 
         .insight-item {{
@@ -1109,26 +1345,28 @@ html_content = f"""
             align-items: center;
             gap: 0.75rem;
             cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 0.75rem;
+            padding: 0.85rem 1rem;
+            border-radius: var(--radius-md);
             transition: all 0.2s;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
         }}
 
         .insight-item:hover {{
-            background: rgba(34, 197, 94, 0.15);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }}
 
         .insight-icon {{
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             width: 2.25rem;
             height: 2.25rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.15);
+            background: #EFF6FF;
+            border-radius: var(--radius-sm);
         }}
 
         .insight-text {{
@@ -1137,7 +1375,7 @@ html_content = f"""
 
         .insight-label {{
             font-size: 0.7rem;
-            color: #6b7280;
+            color: var(--text-light);
             text-transform: uppercase;
             letter-spacing: 0.3px;
         }}
@@ -1145,15 +1383,15 @@ html_content = f"""
         .insight-value {{
             font-size: 0.9rem;
             font-weight: 600;
-            color: #166534;
+            color: var(--text-primary);
         }}
 
-        /* Global Filter Bar */
+        /* === Global Filter Toolbar === */
         .global-filter-bar {{
-            background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
-            border: 1px solid rgba(234, 179, 8, 0.25);
-            border-radius: 1rem;
-            padding: 0.75rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 0.85rem 1rem;
             margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
@@ -1163,8 +1401,8 @@ html_content = f"""
 
         .filter-label {{
             font-size: 0.8rem;
-            font-weight: 600;
-            color: #854d0e;
+            font-weight: 500;
+            color: var(--text-muted);
             display: flex;
             align-items: center;
             gap: 0.3rem;
@@ -1178,43 +1416,44 @@ html_content = f"""
 
         .filter-group label {{
             font-size: 0.75rem;
-            color: #78716c;
+            color: var(--text-light);
         }}
 
         .global-filter {{
-            padding: 0.4rem 0.75rem;
-            border: 1px solid rgba(234, 179, 8, 0.35);
-            border-radius: 0.5rem;
-            background: white;
+            padding: 0.45rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
             font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.2s;
+            color: var(--text-muted);
         }}
 
         .global-filter:focus {{
             outline: none;
-            border-color: #eab308;
-            box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.15);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }}
 
         .global-search {{
             flex: 1;
             min-width: 180px;
-            padding: 0.4rem 0.75rem;
-            border: 1px solid rgba(234, 179, 8, 0.35);
-            border-radius: 0.5rem;
-            background: white;
+            padding: 0.45rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
             font-size: 0.85rem;
         }}
 
         .global-search:focus {{
             outline: none;
-            border-color: #eab308;
-            box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.15);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }}
 
         .active-filter-count {{
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            background: var(--accent-primary);
             color: white;
             padding: 0.2rem 0.5rem;
             border-radius: 0.5rem;
@@ -1222,59 +1461,10 @@ html_content = f"""
             font-weight: 600;
         }}
 
-        /* Section Icons */
+        /* Section icon styling - all sections use unified design now */
         .section-icon {{
             font-size: 1rem;
-            margin-right: 0.5rem;
-        }}
-
-        /* Section type colors */
-        .section-title.temporal {{
-            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-            border-color: rgba(59, 130, 246, 0.2);
-        }}
-        .section-title.temporal:hover {{
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-        }}
-
-        .section-title.speaker {{
-            background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%);
-            border-color: rgba(168, 85, 247, 0.2);
-        }}
-        .section-title.speaker:hover {{
-            background: linear-gradient(135deg, #fae8ff 0%, #f5d0fe 100%);
-        }}
-
-        .section-title.content {{
-            background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
-            border-color: rgba(249, 115, 22, 0.2);
-        }}
-        .section-title.content:hover {{
-            background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%);
-        }}
-
-        .section-title.topic {{
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-            border-color: rgba(34, 197, 94, 0.2);
-        }}
-        .section-title.topic:hover {{
-            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-        }}
-
-        .section-title.explorer {{
-            background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
-            border-color: rgba(234, 179, 8, 0.2);
-        }}
-        .section-title.explorer:hover {{
-            background: linear-gradient(135deg, #fef9c3 0%, #fef08a 100%);
-        }}
-
-        .section-title.table {{
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border-color: rgba(100, 116, 139, 0.2);
-        }}
-        .section-title.table:hover {{
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            opacity: 0.7;
         }}
 
         @media (max-width: 768px) {{
@@ -1282,16 +1472,19 @@ html_content = f"""
                 grid-template-columns: 1fr;
             }}
 
+            header .container {{
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }}
+
+            .header-stats {{
+                width: 100%;
+                justify-content: space-between;
+            }}
+
             h1 {{
-                font-size: 1.5rem;
-            }}
-
-            .stats-grid {{
-                gap: 0.5rem;
-            }}
-
-            .stat-card {{
-                padding: 0.5rem 1rem;
+                font-size: 1.1rem;
             }}
 
             .topic-grid {{
@@ -1316,8 +1509,28 @@ html_content = f"""
 <body>
     <header>
         <div class="container">
-            <h1>Federal Reserve Speeches</h1>
-            <p class="subtitle">Metadata Dashboard &bull; {year_range}</p>
+            <div class="header-left">
+                <h1>Federal Reserve Speeches</h1>
+                <span class="subtitle">Metadata Dashboard</span>
+            </div>
+            <div class="header-stats">
+                <div class="header-stat">
+                    <span class="header-stat-value">{total_speeches:,}</span>
+                    <span class="header-stat-label">speeches</span>
+                </div>
+                <div class="header-stat">
+                    <span class="header-stat-value">{unique_speakers}</span>
+                    <span class="header-stat-label">speakers</span>
+                </div>
+                <div class="header-stat">
+                    <span class="header-stat-value">{year_range}</span>
+                    <span class="header-stat-label">years</span>
+                </div>
+                <div class="header-stat">
+                    <span class="header-stat-value">{total_words/1_000_000:.1f}M</span>
+                    <span class="header-stat-label">words</span>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -1331,26 +1544,6 @@ html_content = f"""
             <a class="nav-link" onclick="scrollToSection('section-explorer')"><span class="nav-icon">🔍</span> Explorer</a>
             <a class="nav-link" onclick="scrollToSection('section-table')"><span class="nav-icon">📋</span> All Speakers</a>
         </nav>
-
-        <!-- Summary Statistics -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <span class="stat-value">{total_speeches:,}</span>
-                <span class="stat-label">speeches</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-value">{unique_speakers}</span>
-                <span class="stat-label">speakers</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-value">{year_range}</span>
-                <span class="stat-label">years</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-value">{total_words/1_000_000:.1f}M</span>
-                <span class="stat-label">words</span>
-            </div>
-        </div>
 
         <!-- Key Insights Panel -->
         <div class="insights-panel">
@@ -1450,9 +1643,29 @@ html_content = f"""
             <span><span class="section-icon">🏷️</span> Topic Analysis (LDA)</span>
             <span class="toggle-icon">▼</span>
         </h2>
-        <div class="section-content" style="max-height: 1200px;">
-            <div class="chart-grid">
-                <div class="chart-card full-width" id="chart-topics-time"></div>
+        <div class="section-content" style="max-height: 1400px;">
+            <div class="chart-card full-width topic-chart-container">
+                <div class="topic-chart-header">
+                    <div class="topic-chart-title">
+                        <span class="chart-title-text">Topic Prevalence Over Time</span>
+                        <span class="chart-subtitle-text">LDA topic share averaged by year</span>
+                    </div>
+                    <div class="topic-chart-controls">
+                        <div class="toggle-group">
+                            <button class="toggle-btn active" id="btn-stacked" onclick="setTopicChartMode('stacked')">Stacked</button>
+                            <button class="toggle-btn" id="btn-lines" onclick="setTopicChartMode('lines')">Lines</button>
+                        </div>
+                        <select class="topic-n-select" id="topicNSelect" onchange="updateTopicChart()">
+                            <option value="4">Top 4</option>
+                            <option value="6" selected>Top 6</option>
+                            <option value="8">All 8</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="topic-chart-body">
+                    <div class="topic-chart-plot" id="chart-topics-time"></div>
+                    <div class="topic-chart-legend" id="topic-legend"></div>
+                </div>
             </div>
             <div class="topic-grid" id="topic-cards"></div>
         </div>
@@ -1601,13 +1814,13 @@ html_content = f"""
             type: 'scatter',
             mode: 'lines',
             fill: 'tozeroy',
-            line: {{ color: '#0284c7', width: 2.5, shape: 'spline' }},
-            fillcolor: 'rgba(14, 165, 233, 0.15)',
+            line: {{ color: '#2563EB', width: 2.5, shape: 'spline' }},
+            fillcolor: 'rgba(37, 99, 235, 0.12)',
             hovertemplate: '<b>%{{x}}</b><br>%{{y}} speeches<extra></extra>'
         }}], {{
-            title: {{ text: 'Speeches Per Year', font: {{ size: 14, color: '#334155' }} }},
-            xaxis: {{ title: '', dtick: 5, tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(148, 163, 184, 0.2)', zeroline: false, automargin: true }},
-            yaxis: {{ title: '', tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(148, 163, 184, 0.2)', zeroline: false }},
+            title: {{ text: 'Speeches Per Year', font: {{ size: 14, color: '#0F172A' }} }},
+            xaxis: {{ title: '', dtick: 5, tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false, automargin: true }},
+            yaxis: {{ title: '', tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
             height: 320,
             margin: {{ l: 45, r: 40, t: 45, b: 35 }},
             plot_bgcolor: 'rgba(0,0,0,0)',
@@ -1637,16 +1850,16 @@ html_content = f"""
                 title: {{ text: 'Speeches', font: {{ size: 11, color: '#64748b' }} }},
                 thickness: 12,
                 len: 0.8,
-                tickfont: {{ size: 10, color: '#64748b' }},
+                tickfont: {{ size: 10, color: '#475569' }},
                 outlinewidth: 0
             }}
         }}], {{
             title: {{
                 text: 'Speech Frequency by Month and Year',
-                font: {{ size: 14, color: '#334155' }}
+                font: {{ size: 14, color: '#0F172A' }}
             }},
-            xaxis: {{ title: '', dtick: 5, tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(0,0,0,0)', automargin: true, constrain: 'domain' }},
-            yaxis: {{ title: '', tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(0,0,0,0)', automargin: true }},
+            xaxis: {{ title: '', dtick: 5, tickfont: {{ size: 10, color: '#475569' }}, gridcolor: 'rgba(0,0,0,0)', automargin: true, constrain: 'domain' }},
+            yaxis: {{ title: '', tickfont: {{ size: 10, color: '#475569' }}, gridcolor: 'rgba(0,0,0,0)', automargin: true }},
             height: 320,
             margin: {{ l: 35, r: 60, t: 45, b: 30 }},
             plot_bgcolor: 'rgba(0,0,0,0)',
@@ -1661,16 +1874,17 @@ html_content = f"""
                 type: 'bar',
                 marker: {{
                     color: timeCounts.map((c, i) => {{
-                        // Color based on time of day: morning=warm, afternoon=cool, evening=purple
-                        if (i >= 6 && i < 12) return 'rgba(251, 191, 36, 0.75)';  // Morning - amber
-                        if (i >= 12 && i < 18) return 'rgba(14, 165, 233, 0.75)'; // Afternoon - blue
-                        return 'rgba(139, 92, 246, 0.6)';  // Evening/night - purple
+                        // Soft pastels: morning=peach, midday=mint, afternoon=blue, evening=lavender
+                        if (i >= 6 && i < 10) return '#FECACA';   // Early morning - soft peach
+                        if (i >= 10 && i < 14) return '#BBF7D0';  // Late morning/lunch - soft mint
+                        if (i >= 14 && i < 18) return '#93C5FD';  // Afternoon - soft blue
+                        return '#DDD6FE';                          // Evening/night - soft lavender
                     }}),
-                    line: {{ color: 'rgba(100, 116, 139, 0.3)', width: 0.5 }}
+                    line: {{ color: 'rgba(255,255,255,0.6)', width: 0.5 }}
                 }},
                 hovertemplate: '<b>%{{x}}</b><br>%{{y}} speeches<extra></extra>'
             }}], {{
-                title: {{ text: 'Time of Day', font: {{ size: 14, color: '#334155' }} }},
+                title: {{ text: 'Time of Day', font: {{ size: 14, color: '#0F172A' }} }},
                 xaxis: {{
                     title: '',
                     tickfont: {{ size: 9, color: '#64748b' }},
@@ -1680,8 +1894,8 @@ html_content = f"""
                 }},
                 yaxis: {{
                     title: '',
-                    tickfont: {{ size: 10, color: '#64748b' }},
-                    gridcolor: 'rgba(148, 163, 184, 0.2)',
+                    tickfont: {{ size: 10, color: '#475569' }},
+                    gridcolor: '#E2E8F0',
                     zeroline: false
                 }},
                 height: 320,
@@ -1704,14 +1918,14 @@ html_content = f"""
             type: 'bar',
             orientation: 'h',
             marker: {{
-                color: speakerCounts.map((_, i) => `rgba(14, 165, 233, ${{0.4 + (i / speakerCounts.length) * 0.5}})`),
-                line: {{ color: 'rgba(2, 132, 199, 0.3)', width: 1 }}
+                color: '#3B82F6',
+                line: {{ color: 'rgba(255,255,255,0.5)', width: 1 }}
             }},
             hovertemplate: '<b>%{{y}}</b><br>%{{x}} speeches<extra></extra>'
         }}], {{
-            title: {{ text: 'Most Frequent Speakers', font: {{ size: 14, color: '#334155' }} }},
-            xaxis: {{ title: '', tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(148, 163, 184, 0.2)', zeroline: false }},
-            yaxis: {{ automargin: true, tickfont: {{ size: 10, color: '#64748b' }}, ticksuffix: '  —  ' }},
+            title: {{ text: 'Most Frequent Speakers', font: {{ size: 14, color: '#0F172A' }} }},
+            xaxis: {{ title: '', tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
+            yaxis: {{ automargin: true, tickfont: {{ size: 10, color: '#475569' }}, ticksuffix: '  —  ' }},
             height: 380,
             margin: {{ l: 130, r: 20, t: 40, b: 25 }},
             plot_bgcolor: 'rgba(0,0,0,0)',
@@ -1726,14 +1940,14 @@ html_content = f"""
             type: 'bar',
             orientation: 'h',
             marker: {{
-                color: avgLengthValues.map((_, i) => `rgba(16, 185, 129, ${{0.4 + (i / avgLengthValues.length) * 0.5}})`),
-                line: {{ color: 'rgba(5, 150, 105, 0.3)', width: 1 }}
+                color: '#3B82F6',
+                line: {{ color: 'rgba(255,255,255,0.5)', width: 1 }}
             }},
             hovertemplate: '<b>%{{y}}</b><br>%{{x:,}} avg words<extra></extra>'
         }}], {{
-            title: {{ text: 'Longest Speeches (avg words)', font: {{ size: 14, color: '#334155' }} }},
-            xaxis: {{ title: '', tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(148, 163, 184, 0.2)', zeroline: false }},
-            yaxis: {{ automargin: true, tickfont: {{ size: 10, color: '#64748b' }}, ticksuffix: '  —  ' }},
+            title: {{ text: 'Longest Speeches (avg words)', font: {{ size: 14, color: '#0F172A' }} }},
+            xaxis: {{ title: '', tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
+            yaxis: {{ automargin: true, tickfont: {{ size: 10, color: '#475569' }}, ticksuffix: '  —  ' }},
             height: 380,
             margin: {{ l: 130, r: 20, t: 40, b: 25 }},
             plot_bgcolor: 'rgba(0,0,0,0)',
@@ -1742,22 +1956,19 @@ html_content = f"""
         }}, {{ responsive: true }});
 
         // Chart: Role Distribution
-        const roleColorScale = [
-            '#0c4a6e', '#0369a1', '#0284c7', '#0ea5e9', '#38bdf8', '#7dd3fc', '#bae6fd', '#e0f2fe', '#f0f9ff'
-        ];
         Plotly.newPlot('chart-roles', [{{
             x: roleValues,
             y: roleNames,
             type: 'bar',
             orientation: 'h',
             marker: {{
-                color: roleValues.map((_, i) => roleColorScale[i % roleColorScale.length]),
+                color: '#3B82F6',
                 line: {{ color: 'rgba(255,255,255,0.5)', width: 1 }}
             }},
             hovertemplate: '<b>%{{y}}</b><br>%{{x:,}} speeches<extra></extra>'
         }}], {{
-            title: {{ text: 'Speeches by Role', font: {{ size: 14, color: '#334155' }} }},
-            xaxis: {{ title: '', tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(148, 163, 184, 0.2)', zeroline: false }},
+            title: {{ text: 'Speeches by Role', font: {{ size: 14, color: '#0F172A' }} }},
+            xaxis: {{ title: '', tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
             yaxis: {{ automargin: true, tickfont: {{ size: 11, color: '#475569' }} }},
             height: 380,
             margin: {{ l: 200, r: 30, t: 40, b: 30 }},
@@ -1767,16 +1978,17 @@ html_content = f"""
         }}, {{ responsive: true }});
 
         // Chart: Roles Over Time - cleaner color palette
+        // Colorblind-safe palette for role stacked area
         const roleColors = {{
-            'President': '#0c4a6e',
-            'Governor': '#0ea5e9',
-            'Chair': '#dc2626',
-            'Vice Chair/Governor': '#059669',
-            'Governor/Vice Chair': '#10b981',
-            'Governor/Vice Chair for Supervision': '#f59e0b',
-            'Executive Vice President': '#64748b',
-            'First Vice President': '#94a3b8',
-            'Interim President': '#cbd5e1'
+            'President': '#2563EB',
+            'Governor': '#14B8A6',
+            'Chair': '#DC2626',
+            'Vice Chair/Governor': '#7C3AED',
+            'Governor/Vice Chair': '#8B5CF6',
+            'Governor/Vice Chair for Supervision': '#F59E0B',
+            'Executive Vice President': '#64748B',
+            'First Vice President': '#94A3B8',
+            'Interim President': '#CBD5E1'
         }};
         const roleLegendNames = {{
             'President': 'President',
@@ -1802,9 +2014,9 @@ html_content = f"""
         }}));
 
         Plotly.newPlot('chart-roles-time', roleTraces, {{
-            title: {{ text: 'Role Mix Over Time', font: {{ size: 14, color: '#334155' }} }},
-            xaxis: {{ title: '', dtick: 5, tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(0,0,0,0)', zeroline: false, range: [roleYears[0] - 0.5, roleYears[roleYears.length-1] + 0.5] }},
-            yaxis: {{ title: '', ticksuffix: '%', range: [0, 100], tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(148, 163, 184, 0.15)', zeroline: false }},
+            title: {{ text: 'Role Mix Over Time', font: {{ size: 14, color: '#0F172A' }} }},
+            xaxis: {{ title: '', dtick: 5, tickfont: {{ size: 10, color: '#475569' }}, gridcolor: 'rgba(0,0,0,0)', zeroline: false, range: [roleYears[0] - 0.5, roleYears[roleYears.length-1] + 0.5] }},
+            yaxis: {{ title: '', ticksuffix: '%', range: [0, 100], tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
             height: 380,
             margin: {{ l: 45, r: 30, t: 40, b: 90 }},
             plot_bgcolor: 'rgba(0,0,0,0)',
@@ -1843,13 +2055,13 @@ html_content = f"""
                     title: {{ text: '%', font: {{ size: 11, color: '#64748b' }} }},
                     thickness: 12,
                     len: 0.8,
-                    tickfont: {{ size: 10, color: '#64748b' }},
+                    tickfont: {{ size: 10, color: '#475569' }},
                     outlinewidth: 0
                 }}
             }}], {{
-                title: {{ text: 'Speaker Topic Focus', font: {{ size: 14, color: '#334155' }} }},
+                title: {{ text: 'Speaker Topic Focus', font: {{ size: 14, color: '#0F172A' }} }},
                 xaxis: {{ title: '', tickangle: -45, tickfont: {{ size: 11, color: '#64748b' }}, automargin: true, gridcolor: 'rgba(0,0,0,0)' }},
-                yaxis: {{ title: '', automargin: true, tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(0,0,0,0)' }},
+                yaxis: {{ title: '', automargin: true, tickfont: {{ size: 10, color: '#475569' }}, gridcolor: 'rgba(0,0,0,0)' }},
                 height: 480,
                 margin: {{ l: 120, r: 60, t: 50, b: 180 }},
                 plot_bgcolor: 'rgba(0,0,0,0)',
@@ -1868,26 +2080,26 @@ html_content = f"""
             type: 'histogram',
             nbinsx: 30,
             marker: {{
-                color: 'rgba(251, 146, 60, 0.75)',
-                line: {{ color: 'rgba(234, 88, 12, 0.4)', width: 0.5 }}
+                color: '#3B82F6',
+                line: {{ color: 'rgba(255,255,255,0.5)', width: 0.5 }}
             }},
             hovertemplate: '<b>%{{x:,.0f}} words</b><br>%{{y}} speeches<extra></extra>'
         }}], {{
-            title: {{ text: 'Distribution of Speech Lengths', font: {{ size: 14, color: '#334155' }} }},
+            title: {{ text: 'Distribution of Speech Lengths', font: {{ size: 14, color: '#0F172A' }} }},
             xaxis: {{
                 title: '',
                 range: [-200, 7200],
                 dtick: 1000,
-                tickfont: {{ size: 10, color: '#64748b' }},
-                gridcolor: 'rgba(148, 163, 184, 0.2)',
+                tickfont: {{ size: 10, color: '#475569' }},
+                gridcolor: '#E2E8F0',
                 zeroline: false,
                 tickformat: ',d',
                 tickvals: [0, 1000, 2000, 3000, 4000, 5000, 6000, 7000]
             }},
             yaxis: {{
                 title: '',
-                tickfont: {{ size: 10, color: '#64748b' }},
-                gridcolor: 'rgba(148, 163, 184, 0.2)',
+                tickfont: {{ size: 10, color: '#475569' }},
+                gridcolor: '#E2E8F0',
                 zeroline: false,
                 rangemode: 'tozero'
             }},
@@ -1911,14 +2123,14 @@ html_content = f"""
                 y: readabilityScores,
                 type: 'scatter',
                 mode: 'lines+markers',
-                line: {{ color: '#8b5cf6', width: 2.5, shape: 'spline' }},
-                marker: {{ size: 5, color: '#8b5cf6' }},
+                line: {{ color: '#3B82F6', width: 2.5, shape: 'spline' }},
+                marker: {{ size: 5, color: '#3B82F6' }},
                 connectgaps: true,
                 hovertemplate: '<b>%{{x}}</b><br>Fog Index: %{{y:.1f}}<extra></extra>'
             }}], {{
-                title: {{ text: 'Readability Over Time (Gunning Fog Index)', font: {{ size: 14, color: '#334155' }} }},
-                xaxis: {{ title: '', dtick: 5, range: [1997, 2026], tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(148, 163, 184, 0.2)', zeroline: false }},
-                yaxis: {{ title: '', range: [16.5, 20], tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(148, 163, 184, 0.2)', zeroline: false }},
+                title: {{ text: 'Readability Over Time (Gunning Fog Index)', font: {{ size: 14, color: '#0F172A' }} }},
+                xaxis: {{ title: '', dtick: 5, range: [1997, 2026], tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
+                yaxis: {{ title: '', range: [16.5, 20], tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
                 height: 280,
                 margin: {{ l: 45, r: 20, t: 55, b: 35 }},
                 plot_bgcolor: 'rgba(0,0,0,0)',
@@ -1948,9 +2160,9 @@ html_content = f"""
                     connectgaps: true,
                     hovertemplate: '<b>%{{x}}</b><br>Score: %{{y:.3f}}<extra></extra>'
                 }}], {{
-                    title: {{ text: 'Hawkish vs Dovish Sentiment (FinBERT-FOMC)', font: {{ size: 14, color: '#334155' }} }},
-                    xaxis: {{ title: '', dtick: 5, range: [1995, 2026], tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(148, 163, 184, 0.2)', zeroline: false }},
-                    yaxis: {{ title: '', zeroline: true, zerolinecolor: '#cbd5e1', zerolinewidth: 1, range: [-0.35, 0.15], tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(148, 163, 184, 0.2)' }},
+                    title: {{ text: 'Hawkish vs Dovish Sentiment (FinBERT-FOMC)', font: {{ size: 14, color: '#0F172A' }} }},
+                    xaxis: {{ title: '', dtick: 5, range: [1995, 2026], tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
+                    yaxis: {{ title: '', zeroline: true, zerolinecolor: '#cbd5e1', zerolinewidth: 1, range: [-0.35, 0.15], tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0' }},
                     height: 280,
                     margin: {{ l: 45, r: 20, t: 55, b: 35 }},
                     plot_bgcolor: 'rgba(0,0,0,0)',
@@ -1969,16 +2181,16 @@ html_content = f"""
                 y: uncertaintyScores,
                 type: 'scatter',
                 mode: 'lines+markers',
-                line: {{ color: '#f59e0b', width: 2.5, shape: 'spline' }},
-                marker: {{ size: 5, color: '#f59e0b' }},
+                line: {{ color: '#3B82F6', width: 2.5, shape: 'spline' }},
+                marker: {{ size: 5, color: '#3B82F6' }},
                 fill: 'tozeroy',
-                fillcolor: 'rgba(245, 158, 11, 0.12)',
+                fillcolor: 'rgba(59, 130, 246, 0.12)',
                 connectgaps: true,
                 hovertemplate: '<b>%{{x}}</b><br>%{{y:.1f}} hedging words/1000<extra></extra>'
             }}], {{
-                title: {{ text: 'Uncertainty Index Over Time', font: {{ size: 14, color: '#334155' }} }},
-                xaxis: {{ title: '', dtick: 5, range: [1997, 2026], tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(148, 163, 184, 0.2)', zeroline: false }},
-                yaxis: {{ title: '', range: [14, 24], tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(148, 163, 184, 0.2)', zeroline: false }},
+                title: {{ text: 'Uncertainty Index Over Time', font: {{ size: 14, color: '#0F172A' }} }},
+                xaxis: {{ title: '', dtick: 5, range: [1997, 2026], tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
+                yaxis: {{ title: '', range: [14, 24], tickfont: {{ size: 10, color: '#475569' }}, gridcolor: '#E2E8F0', zeroline: false }},
                 height: 280,
                 margin: {{ l: 45, r: 20, t: 55, b: 35 }},
                 plot_bgcolor: 'rgba(0,0,0,0)',
@@ -1991,53 +2203,215 @@ html_content = f"""
             }}, {{ responsive: true }});
         }}
 
-        // Chart 9: LDA Topics Over Time (8 improved topics)
+        // Chart 9: LDA Topics Over Time - Redesigned per spec
         if (ldaAvailable) {{
-            // Elegant color palette for 8 topics
+            // Soft pastel palette
             const topicColors = [
-                '#0c4a6e', '#0369a1', '#0284c7', '#0ea5e9',  // Blues
-                '#059669', '#10b981',  // Greens
-                '#d97706', '#f59e0b'  // Amber/Orange
+                '#93C5FD',  // Pastel blue
+                '#6EE7B7',  // Pastel mint
+                '#FCD34D',  // Pastel yellow
+                '#C4B5FD',  // Pastel lavender
+                '#FDA4AF',  // Pastel pink
+                '#A5F3FC',  // Pastel cyan
+                '#D1D5DB'   // Light gray (for "Other")
             ];
 
-            // Create traces for stacked area chart
-            const topicTraces = topicLabels.map((label, idx) => {{
-                const isMonetaryPolicy = topicShortLabels[idx].includes('FOMC') || topicShortLabels[idx].includes('Monetary Policy');
-                return {{
-                    x: topicYears,
-                    y: topicTracesData[label],
-                    name: topicShortLabels[idx],
-                    type: 'scatter',
-                    mode: 'lines',
-                    stackgroup: 'one',
-                    line: {{ width: 0.5, color: 'rgba(255,255,255,0.3)' }},
-                    fillcolor: topicColors[idx % topicColors.length],
-                    hovertemplate: '<b>' + topicShortLabels[idx] + '</b><br>%{{y:.1f}}%<extra></extra>'
-                }};
+            // Calculate average share for each topic to sort by importance
+            const topicAvgShares = topicLabels.map((label, idx) => {{
+                const data = topicTracesData[label];
+                const avg = data.reduce((a, b) => a + b, 0) / data.length;
+                return {{ idx, label, shortLabel: topicShortLabels[idx], avg, data }};
             }});
 
-            Plotly.newPlot('chart-topics-time', topicTraces, {{
-                title: {{ text: 'Topic Prevalence Over Time', font: {{ size: 14, color: '#334155' }} }},
-                xaxis: {{ title: '', dtick: 5, tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(0,0,0,0)', zeroline: false }},
-                yaxis: {{ title: '', ticksuffix: '%', range: [0, 100], tickfont: {{ size: 10, color: '#64748b' }}, gridcolor: 'rgba(148, 163, 184, 0.15)', zeroline: false }},
-                height: 450,
-                margin: {{ l: 45, r: 20, t: 50, b: 110 }},
-                plot_bgcolor: 'rgba(0,0,0,0)',
-                paper_bgcolor: 'rgba(0,0,0,0)',
-                hovermode: 'x unified',
-                legend: {{
-                    orientation: 'h',
-                    y: -0.22,
-                    x: 0.5,
-                    xanchor: 'center',
-                    font: {{ size: 9, color: '#64748b' }}
-                }},
-                annotations: [{{
-                    x: 0.5, y: 1.08, xref: 'paper', yref: 'paper',
-                    text: 'LDA topic probability averaged by year',
-                    showarrow: false, font: {{ size: 9, color: '#94a3b8' }}, xanchor: 'center'
-                }}]
-            }}, {{ responsive: true }});
+            // Sort by average share descending
+            topicAvgShares.sort((a, b) => b.avg - a.avg);
+
+            let topicChartMode = 'stacked';
+            let highlightedTopic = null;
+
+            function updateTopicChart() {{
+                const n = parseInt(document.getElementById('topicNSelect').value);
+                const topN = topicAvgShares.slice(0, n);
+
+                // Calculate "Other" if we're showing fewer than all topics
+                let otherData = null;
+                if (n < topicLabels.length) {{
+                    const remaining = topicAvgShares.slice(n);
+                    otherData = topicYears.map((_, yearIdx) => {{
+                        return remaining.reduce((sum, t) => sum + t.data[yearIdx], 0);
+                    }});
+                }}
+
+                // Create traces
+                const traces = topN.map((topic, i) => {{
+                    const baseTrace = {{
+                        x: topicYears,
+                        y: topic.data,
+                        name: topic.shortLabel,
+                        type: 'scatter',
+                        hovertemplate: '<b>' + topic.shortLabel + '</b><br>%{{y:.1f}}%<extra></extra>'
+                    }};
+
+                    if (topicChartMode === 'stacked') {{
+                        return {{
+                            ...baseTrace,
+                            mode: 'lines',
+                            stackgroup: 'one',
+                            line: {{ width: 0.5, color: 'rgba(255,255,255,0.4)' }},
+                            fillcolor: topicColors[i]
+                        }};
+                    }} else {{
+                        return {{
+                            ...baseTrace,
+                            mode: 'lines+markers',
+                            line: {{ width: 2.5, color: topicColors[i], shape: 'spline' }},
+                            marker: {{ size: 4, color: topicColors[i] }}
+                        }};
+                    }}
+                }});
+
+                // Add "Other" trace if needed
+                if (otherData && topicChartMode === 'stacked') {{
+                    traces.push({{
+                        x: topicYears,
+                        y: otherData,
+                        name: 'Other',
+                        type: 'scatter',
+                        mode: 'lines',
+                        stackgroup: 'one',
+                        line: {{ width: 0.5, color: 'rgba(255,255,255,0.4)' }},
+                        fillcolor: '#D1D5DB',
+                        hovertemplate: '<b>Other</b><br>%{{y:.1f}}%<extra></extra>'
+                    }});
+                }}
+
+                const layout = {{
+                    xaxis: {{
+                        title: '',
+                        dtick: 5,
+                        tickfont: {{ size: 11, color: '#64748B' }},
+                        gridcolor: 'rgba(0,0,0,0)',
+                        zeroline: false,
+                        showspikes: true,
+                        spikemode: 'across',
+                        spikesnap: 'cursor',
+                        spikecolor: '#CBD5E1',
+                        spikethickness: 1,
+                        spikedash: 'dot'
+                    }},
+                    yaxis: {{
+                        title: '',
+                        ticksuffix: '%',
+                        range: [0, topicChartMode === 'stacked' ? 100 : undefined],
+                        tickfont: {{ size: 11, color: '#64748B' }},
+                        gridcolor: '#E2E8F0',
+                        zeroline: false,
+                        dtick: topicChartMode === 'stacked' ? 25 : undefined
+                    }},
+                    height: 380,
+                    margin: {{ l: 50, r: 20, t: 10, b: 40 }},
+                    plot_bgcolor: 'rgba(0,0,0,0)',
+                    paper_bgcolor: 'rgba(0,0,0,0)',
+                    hovermode: 'closest',
+                    hoverlabel: {{
+                        bgcolor: 'white',
+                        bordercolor: '#E2E8F0',
+                        font: {{ family: '-apple-system, BlinkMacSystemFont, sans-serif', size: 12, color: '#0F172A' }},
+                        namelength: -1
+                    }},
+                    showlegend: false
+                }};
+
+                Plotly.react('chart-topics-time', traces, layout, {{ responsive: true }});
+
+                // Build custom legend
+                const legendContainer = document.getElementById('topic-legend');
+                legendContainer.innerHTML = '';
+
+                topN.forEach((topic, i) => {{
+                    const item = document.createElement('div');
+                    item.className = 'legend-item';
+                    item.dataset.idx = i;
+                    item.innerHTML = `
+                        <div class="legend-swatch" style="background: ${{topicColors[i]}}"></div>
+                        <span class="legend-label">${{topic.shortLabel}}</span>
+                        <span class="legend-value">${{topic.avg.toFixed(1)}}%</span>
+                    `;
+                    item.addEventListener('mouseenter', () => highlightTrace(i));
+                    item.addEventListener('mouseleave', () => clearHighlight());
+                    item.addEventListener('click', () => toggleHighlight(i));
+                    legendContainer.appendChild(item);
+                }});
+
+                if (otherData && topicChartMode === 'stacked') {{
+                    const otherAvg = otherData.reduce((a, b) => a + b, 0) / otherData.length;
+                    const item = document.createElement('div');
+                    item.className = 'legend-item';
+                    item.dataset.idx = topN.length;
+                    item.innerHTML = `
+                        <div class="legend-swatch" style="background: #D1D5DB"></div>
+                        <span class="legend-label">Other</span>
+                        <span class="legend-value">${{otherAvg.toFixed(1)}}%</span>
+                    `;
+                    legendContainer.appendChild(item);
+                }}
+            }}
+
+            function highlightTrace(idx) {{
+                if (highlightedTopic !== null) return;
+                const items = document.querySelectorAll('.legend-item');
+                items.forEach((item, i) => {{
+                    if (i === idx) {{
+                        item.classList.add('highlighted');
+                        item.classList.remove('dimmed');
+                    }} else {{
+                        item.classList.add('dimmed');
+                        item.classList.remove('highlighted');
+                    }}
+                }});
+                // Dim other traces
+                const update = {{}};
+                const n = parseInt(document.getElementById('topicNSelect').value);
+                const numTraces = topicChartMode === 'stacked' && n < topicLabels.length ? n + 1 : n;
+                for (let i = 0; i < numTraces; i++) {{
+                    update['opacity'] = i === idx ? 1 : 0.25;
+                }}
+                Plotly.restyle('chart-topics-time', {{ opacity: Array(numTraces).fill(0.25).map((_, i) => i === idx ? 1 : 0.25) }});
+            }}
+
+            function clearHighlight() {{
+                if (highlightedTopic !== null) return;
+                const items = document.querySelectorAll('.legend-item');
+                items.forEach(item => {{
+                    item.classList.remove('highlighted', 'dimmed');
+                }});
+                const n = parseInt(document.getElementById('topicNSelect').value);
+                const numTraces = topicChartMode === 'stacked' && n < topicLabels.length ? n + 1 : n;
+                Plotly.restyle('chart-topics-time', {{ opacity: Array(numTraces).fill(1) }});
+            }}
+
+            function toggleHighlight(idx) {{
+                if (highlightedTopic === idx) {{
+                    highlightedTopic = null;
+                    clearHighlight();
+                }} else {{
+                    highlightedTopic = idx;
+                    highlightTrace(idx);
+                }}
+            }}
+
+            window.setTopicChartMode = function(mode) {{
+                topicChartMode = mode;
+                document.getElementById('btn-stacked').classList.toggle('active', mode === 'stacked');
+                document.getElementById('btn-lines').classList.toggle('active', mode === 'lines');
+                highlightedTopic = null;
+                updateTopicChart();
+            }};
+
+            window.updateTopicChart = updateTopicChart;
+
+            // Initial render
+            updateTopicChart();
 
             // Create topic cards
             const topicCardsContainer = document.getElementById('topic-cards');
@@ -2413,11 +2787,6 @@ html_content = f"""
 
         // LDA topics over time click - filter by topic
         if (ldaAvailable) {{
-            document.getElementById('chart-topics-time').on('plotly_click', function(data) {{
-                const topicIdx = data.points[0].curveNumber;
-                const topicName = topicShortLabels[topicIdx];
-                applySpeechFilter('topic', topicIdx, topicName);
-            }});
         }}
 
         // Sentiment chart click - filter by year
