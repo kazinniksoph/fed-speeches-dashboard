@@ -139,7 +139,7 @@ df['speaker'] = df['speaker'].apply(normalize_speaker)
 df['match_key'] = df['speaker'].astype(str) + '_' + df['date'].astype(str)
 
 # Load LDA topic assignments and join (using full corpus results)
-lda_df = pd.read_csv('/Users/sophiakazinnik/Research/central_bank_speeches_communication/lda_full_results/speech_topic_assignments.csv')
+lda_df = pd.read_csv('/Users/sophiakazinnik/Research/central_bank_speeches_communication/lda_improved_results/speech_topic_assignments.csv')
 lda_df['speaker'] = lda_df['speaker'].apply(normalize_speaker)
 lda_df['match_key'] = lda_df['speaker'].astype(str) + '_' + lda_df['date'].astype(str)
 
@@ -352,37 +352,30 @@ for idx, row in df.iterrows():
 
 # === LDA Topic Analysis Data ===
 import os
-lda_output_dir = '/Users/sophiakazinnik/Research/central_bank_speeches_communication/lda_full_results'
+lda_output_dir = '/Users/sophiakazinnik/Research/central_bank_speeches_communication/lda_improved_results'
 
 # Load LDA results if available
-lda_available = os.path.exists(f'{lda_output_dir}/topic_definitions_k15.csv')
+lda_available = os.path.exists(f'{lda_output_dir}/topic_definitions_k8.csv')
 
 if lda_available:
-    # Load topic definitions (15 topics)
-    topic_defs = pd.read_csv(f'{lda_output_dir}/topic_definitions_k15.csv')
+    # Load topic definitions (8 topics - improved LDA with coherence optimization)
+    topic_defs = pd.read_csv(f'{lda_output_dir}/topic_definitions_k8.csv')
 
     # Create topic labels from top words
     topic_labels = []
     topic_short_labels = []
     topic_top_words = []
 
-    # Define readable labels for the 15 topics based on top words (full corpus LDA)
+    # Define readable labels for the 8 improved topics
     readable_labels = {
-        0: 'Mortgage & Housing',
-        1: 'General Communication',
-        2: 'Community Banking',
-        3: 'Risk Management',
-        4: 'Banking Regulation',
-        5: 'Labor & Education',
-        6: 'Financial Stability',
-        7: 'Monetary Policy Theory',
-        8: 'Capital & Stress Testing',
-        9: 'Inflation & Labor Market',
-        10: 'Financial Crisis/Reform',
-        11: 'Payments & Technology',
-        12: 'International & Trade',
-        13: 'Regional & Public Events',
-        14: 'Balance Sheet & QE'
+        0: 'Banking Regulation',
+        1: 'Monetary Policy Theory',
+        2: 'Risk Management',
+        3: 'Inflation & Labor Market',
+        4: 'Payments & Treasury',
+        5: 'Community & Education',
+        6: 'International & Trade',
+        7: 'Credit & Housing'
     }
 
     for _, row in topic_defs.iterrows():
@@ -395,7 +388,7 @@ if lda_available:
 
     # Load speech-level topic assignments and aggregate by year
     speech_topics = pd.read_csv(f'{lda_output_dir}/speech_topic_assignments.csv')
-    topic_cols = [f'topic_{i}_prob' for i in range(15)]
+    topic_cols = [f'topic_{i}_prob' for i in range(8)]
 
     # Aggregate by year - average topic probabilities
     yearly_topic_dist = speech_topics.groupby('year')[topic_cols].mean()
@@ -407,11 +400,11 @@ if lda_available:
         col = f'topic_{i}_prob'
         topic_traces_data[label] = [float(x) * 100 for x in yearly_topic_dist[col].tolist()]
 
-    # Load speaker aggregation for speaker-topic heatmap
-    speaker_agg = pd.read_csv(f'{lda_output_dir}/speaker_aggregation.csv')
+    # Calculate speaker aggregation for speaker-topic heatmap
+    speaker_agg_df = speech_topics.groupby('speaker').size().reset_index(name='total_speeches')
 
     # Get top 12 speakers by speech count
-    top_speakers_for_topics = speaker_agg.nlargest(12, 'total_speeches')['speaker'].tolist()
+    top_speakers_for_topics = speaker_agg_df.nlargest(12, 'total_speeches')['speaker'].tolist()
 
     # Calculate average topic distribution for each top speaker
     speaker_topic_data = []
@@ -420,11 +413,11 @@ if lda_available:
         avg_topics = speaker_speeches[topic_cols].mean()
         speaker_topic_data.append({
             'speaker': speaker,
-            **{f'topic_{i}': avg_topics[f'topic_{i}_prob'] * 100 for i in range(15)}
+            **{f'topic_{i}': avg_topics[f'topic_{i}_prob'] * 100 for i in range(8)}
         })
 
     speaker_topic_df = pd.DataFrame(speaker_topic_data)
-    topic_cols_short = [f'topic_{i}' for i in range(15)]
+    topic_cols_short = [f'topic_{i}' for i in range(8)]
     speaker_topic_matrix = speaker_topic_df[topic_cols_short].values.tolist()
     speaker_topic_names = speaker_topic_df['speaker'].tolist()
 
@@ -1968,15 +1961,13 @@ html_content = f"""
             }}, {{ responsive: true }});
         }}
 
-        // Chart 9: LDA Topics Over Time (15 topics)
+        // Chart 9: LDA Topics Over Time (8 improved topics)
         if (ldaAvailable) {{
-            // Elegant color palette for 15 topics
+            // Elegant color palette for 8 topics
             const topicColors = [
-                '#0c4a6e', '#0369a1', '#0284c7', '#0ea5e9', '#38bdf8',  // Blues
-                '#059669', '#10b981', '#34d399',  // Greens
-                '#d97706', '#f59e0b', '#f87171',  // Amber/Orange/Red
-                '#8b5cf6', '#a78bfa', '#c4b5fd',  // Purples
-                '#64748b'  // Slate
+                '#0c4a6e', '#0369a1', '#0284c7', '#0ea5e9',  // Blues
+                '#059669', '#10b981',  // Greens
+                '#d97706', '#f59e0b'  // Amber/Orange
             ];
 
             // Create traces for stacked area chart

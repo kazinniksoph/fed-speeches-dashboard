@@ -21,3 +21,8 @@ scripts/plotly.min.js
 
 # OS
 .DS_Store
+
+# Large model files
+bertopic_results/bertopic_model
+bertopic_results/bertopic_model/
+*.safetensors
