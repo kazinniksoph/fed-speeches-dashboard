@@ -28,7 +28,7 @@ import os
 
 # Input paths
 ROBIN_METADATA_FILE = '/Users/sophiakazinnik/Research/Robin/speeches_Sophia/full_speeches_as_of_2022_03.csv'
-SPEECHES_DIR = '/Users/sophiakazinnik/Research/central_bank_speeches_communication/non time stamped speeches'
+SPEECHES_DIR = '/Users/sophiakazinnik/Research/central_bank_speeches_communication/year_all'
 
 # Output paths
 OUTPUT_DIR = '/Users/sophiakazinnik/Research/central_bank_speeches_communication/metadata'

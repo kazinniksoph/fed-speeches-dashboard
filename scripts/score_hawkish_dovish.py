@@ -12,7 +12,8 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Paths
-data_path = '/Users/sophiakazinnik/Research/central_bank_speeches_communication/speech_data/all_speeches_merged.csv'
+import glob
+data_dir = '/Users/sophiakazinnik/Research/central_bank_speeches_communication/year_all'
 output_dir = '/Users/sophiakazinnik/Research/central_bank_speeches_communication/analysis_output'
 
 print("Loading model...")
@@ -25,7 +26,8 @@ classifier = pipeline(
 )
 
 print("Loading speeches...")
-df = pd.read_csv(data_path)
+files = sorted(glob.glob(f'{data_dir}/*.csv'))
+df = pd.concat([pd.read_csv(f) for f in files], ignore_index=True)
 
 # Parse dates
 from datetime import datetime

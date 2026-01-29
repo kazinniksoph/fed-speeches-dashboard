@@ -65,7 +65,7 @@ def normalize_speaker(name):
 
 # === Load Data ===
 print("Loading speech data...")
-data_dir = '/Users/sophiakazinnik/Research/central_bank_speeches_communication/non time stamped speeches'
+data_dir = '/Users/sophiakazinnik/Research/central_bank_speeches_communication/year_all'
 files = glob.glob(f'{data_dir}/*.csv')
 dfs = []
 for f in sorted(files):

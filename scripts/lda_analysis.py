@@ -34,8 +34,11 @@ MIN_DF = 10  # Minimum document frequency for a term
 MAX_DF = 0.7  # Maximum document frequency (as proportion)
 
 # === Load Data ===
+import glob
 print("Loading speech data...")
-df = pd.read_csv('/Users/sophiakazinnik/Research/central_bank_speeches_communication/speech_data/all_speeches_merged.csv')
+data_dir = '/Users/sophiakazinnik/Research/central_bank_speeches_communication/year_all'
+files = sorted(glob.glob(f'{data_dir}/*.csv'))
+df = pd.concat([pd.read_csv(f) for f in files], ignore_index=True)
 
 # Parse dates
 def parse_date(date_str):

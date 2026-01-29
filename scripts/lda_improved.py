@@ -176,7 +176,7 @@ def compute_coherence_umass(lda_model, doc_term_matrix, feature_names):
 
 def main():
     print("Loading speech data...")
-    data_dir = '/Users/sophiakazinnik/Research/central_bank_speeches_communication/non time stamped speeches'
+    data_dir = '/Users/sophiakazinnik/Research/central_bank_speeches_communication/year_all'
     files = glob.glob(f'{data_dir}/*.csv')
     dfs = []
     for f in sorted(files):

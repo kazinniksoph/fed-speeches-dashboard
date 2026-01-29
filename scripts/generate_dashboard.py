@@ -125,14 +125,19 @@ def normalize_speaker(name):
     name = str(name).strip()
     return SPEAKER_NORMALIZATION.get(name, name)
 
-# Load all non-timestamped speeches (7,501 speeches - the complete dataset)
-nts_files = glob.glob('/Users/sophiakazinnik/Research/central_bank_speeches_communication/non time stamped speeches/*.csv')
+# Load all speeches from year_all
+nts_files = glob.glob('/Users/sophiakazinnik/Research/central_bank_speeches_communication/year_all/*.csv')
 nts_dfs = []
 for f in sorted(nts_files):
     temp_df = pd.read_csv(f)
     if len(temp_df) > 0:
         nts_dfs.append(temp_df)
 df = pd.concat(nts_dfs, ignore_index=True)
+
+# Filter out speeches with empty/NA text
+df = df.dropna(subset=['text'])
+df = df[df['text'].str.len() >= 100]  # Require at least 100 characters
+print(f"Loaded {len(df)} speeches (after filtering empty/short text)")
 
 # Normalize speaker names
 df['speaker'] = df['speaker'].apply(normalize_speaker)
@@ -363,27 +368,29 @@ import os
 lda_output_dir = '/Users/sophiakazinnik/Research/central_bank_speeches_communication/lda_improved_results'
 
 # Load LDA results if available
-lda_available = os.path.exists(f'{lda_output_dir}/topic_definitions_k8.csv')
+lda_available = os.path.exists(f'{lda_output_dir}/topic_definitions_k10.csv')
 
 if lda_available:
-    # Load topic definitions (8 topics - improved LDA with coherence optimization)
-    topic_defs = pd.read_csv(f'{lda_output_dir}/topic_definitions_k8.csv')
+    # Load topic definitions (10 topics - improved LDA with coherence optimization)
+    topic_defs = pd.read_csv(f'{lda_output_dir}/topic_definitions_k10.csv')
 
     # Create topic labels from top words
     topic_labels = []
     topic_short_labels = []
     topic_top_words = []
 
-    # Define readable labels for the 8 improved topics
+    # Define readable labels for the 10 topics (K=10 LDA)
     readable_labels = {
         0: 'Banking Regulation',
-        1: 'Monetary Policy Theory',
-        2: 'Risk Management',
-        3: 'Inflation & Labor Market',
-        4: 'Payments & Treasury',
-        5: 'Community & Education',
-        6: 'International & Trade',
-        7: 'Credit & Housing'
+        1: 'Bank Supervision & Basel',
+        2: 'Community Lending & Housing',
+        3: 'Education & Workforce',
+        4: 'Balance Sheet & Securities',
+        5: 'Payment Systems & Technology',
+        6: 'Monetary Policy',
+        7: 'Economic Outlook & Labor',
+        8: 'International & Trade',
+        9: 'Financial Stability & Crisis'
     }
 
     for _, row in topic_defs.iterrows():
@@ -396,7 +403,7 @@ if lda_available:
 
     # Load speech-level topic assignments and aggregate by year
     speech_topics = pd.read_csv(f'{lda_output_dir}/speech_topic_assignments.csv')
-    topic_cols = [f'topic_{i}_prob' for i in range(8)]
+    topic_cols = [f'topic_{i}_prob' for i in range(10)]
 
     # Aggregate by year - average topic probabilities
     yearly_topic_dist = speech_topics.groupby('year')[topic_cols].mean()
@@ -421,11 +428,11 @@ if lda_available:
         avg_topics = speaker_speeches[topic_cols].mean()
         speaker_topic_data.append({
             'speaker': speaker,
-            **{f'topic_{i}': avg_topics[f'topic_{i}_prob'] * 100 for i in range(8)}
+            **{f'topic_{i}': avg_topics[f'topic_{i}_prob'] * 100 for i in range(10)}
         })
 
     speaker_topic_df = pd.DataFrame(speaker_topic_data)
-    topic_cols_short = [f'topic_{i}' for i in range(8)]
+    topic_cols_short = [f'topic_{i}' for i in range(10)]
     speaker_topic_matrix = speaker_topic_df[topic_cols_short].values.tolist()
     speaker_topic_names = speaker_topic_df['speaker'].tolist()
 
@@ -1683,8 +1690,9 @@ html_content = f"""
                         </div>
                         <select class="topic-n-select" id="topicNSelect" onchange="updateTopicChart()">
                             <option value="4">Top 4</option>
-                            <option value="6" selected>Top 6</option>
-                            <option value="8">All 8</option>
+                            <option value="6">Top 6</option>
+                            <option value="8">Top 8</option>
+                            <option value="10" selected>All 10</option>
                         </select>
                     </div>
                 </div>
@@ -2208,15 +2216,18 @@ html_content = f"""
 
         // Chart 9: LDA Topics Over Time - Redesigned per spec
         if (ldaAvailable) {{
-            // Modern editorial palette - vibrant but sophisticated
+            // Modern editorial palette - vibrant but sophisticated (10 topics)
             const topicColors = [
-                '#0D9488',  // Teal (brighter)
+                '#0D9488',  // Teal
                 '#E07A5F',  // Coral terracotta
                 '#4A9B6E',  // Fresh green
                 '#9B6B9E',  // Orchid purple
                 '#E6A940',  // Golden amber
                 '#5B8FB9',  // Ocean blue
-                '#C4BDB3'   // Warm gray (for "Other")
+                '#D97706',  // Warm orange
+                '#7C3AED',  // Violet
+                '#059669',  // Emerald
+                '#DC2626'   // Red
             ];
 
             // Calculate average share for each topic to sort by importance
