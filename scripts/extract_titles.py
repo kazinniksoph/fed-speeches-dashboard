@@ -137,6 +137,20 @@ def extract_title_regex(text):
         if not re.match(r'^(Thank|Today|Good|Let|I\s)', title):
             return title, 'title_before_location'
 
+    # Pattern 10: "Remarks by [Name]... [Date] [TITLE] [Speech body]"
+    # The title is between the date and speech body (Good/Thank/It is/I am)
+    match = re.search(
+        r'^Remarks by\s+.+?(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}\s+([A-Z][A-Za-z\s,:\-\'\"\(\)&;]+?)\s+(?:Good\s+(?:morning|afternoon|evening)|Thank\s+you|It\s+is\s+(?:a\s+pleasure|my\s+pleasure|an\s+honor)|I\s+am\s+(?:pleased|delighted|honored)|Ladies\s+and\s+gentlemen|It\s+is\s+always)',
+        header
+    )
+    if match:
+        title = match.group(1).strip()
+        # Clean up trailing punctuation and whitespace
+        title = re.sub(r'[\s\*\.,;:]+$', '', title)
+        # Make sure it's not just intro phrases
+        if 10 < len(title) < 150 and not re.match(r'^(Introduction|Acknowledgments?|Overview)\s*$', title, re.I):
+            return title, 'remarks_after_date'
+
     return None, None
 
 
