@@ -38,6 +38,19 @@ def extract_title_regex(text):
     # Get first 2000 chars for analysis
     header = text[:2000]
 
+    # Pattern 0: Title at very start before "Remarks/Statement/Testimony"
+    # e.g., "The Role of the Dollar Remarks Alan S. Blinder..."
+    match = re.match(
+        r'^([A-Z][A-Za-z\s,:\-\'\"\(\)&]{10,120}?)\s+(?:Remarks|Statement|Testimony|Speech)\s+(?:by\s+)?[A-Z][a-z]+\s+[A-Z]',
+        header
+    )
+    if match:
+        title = match.group(1).strip()
+        # Filter out non-titles
+        if not re.match(r'^(The Federal Reserve Board|Notes for Welcoming)\s*$', title, re.I):
+            if not re.search(r'\s+(the|a|an|of|in|on|at|to|for|by)$', title, re.I):  # Doesn't end incomplete
+                return title, 'title_before_remarks'
+
     # Pattern 1: "For release on delivery [time] [date] [TITLE] Remarks by [Name]"
     # The title is between the date and "Remarks by"
     match = re.search(
