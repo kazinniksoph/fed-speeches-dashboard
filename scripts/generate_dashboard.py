@@ -203,6 +203,21 @@ else:
     df['fed_bank'] = None
     print("Bank metadata file not found - bank filter will be unavailable")
 
+# Load extracted speech titles
+titles_file = '/Users/sophiakazinnik/Research/central_bank_speeches_communication/analysis_output/speech_titles_cleaned.csv'
+if os.path.exists(titles_file):
+    titles_df = pd.read_csv(titles_file)
+    # Create lookup by speaker + date
+    titles_df['title_key'] = titles_df['speaker'].fillna('') + '_' + titles_df['date'].fillna('')
+    title_lookup = dict(zip(titles_df['title_key'], titles_df['extracted_title']))
+    df['title_key'] = df['speaker'].fillna('') + '_' + df['date'].fillna('')
+    df['speech_title'] = df['title_key'].map(title_lookup)
+    df = df.drop(columns=['title_key'])
+    print(f"Speech titles loaded: {df['speech_title'].notna().sum()} speeches with titles")
+else:
+    df['speech_title'] = None
+    print("Speech titles file not found")
+
 # Get unique banks for filter dropdown
 unique_banks = sorted([b for b in df['fed_bank'].dropna().unique() if b and str(b) != 'nan'])
 bank_options_html = '<option value="all">All Banks</option>\n' + '\n'.join([f'                    <option value="{b}">{b}</option>' for b in unique_banks])
@@ -379,6 +394,7 @@ for idx, row in df.iterrows():
         speech_explorer_data.append({
             'id': int(idx),
             'speaker': str(row['speaker']) if pd.notna(row['speaker']) else '',
+            'title': str(row['speech_title']) if pd.notna(row['speech_title']) else '',
             'date': row['parsed_date'].strftime('%Y-%m-%d') if pd.notna(row['parsed_date']) else '',
             'time': time_str,
             'hour': hour_val,
@@ -1195,6 +1211,14 @@ html_content = f"""
         .speech-item-date {{
             color: var(--text-light);
             font-size: 0.8rem;
+        }}
+
+        .speech-item-title {{
+            font-weight: 500;
+            color: var(--accent-primary);
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+            line-height: 1.3;
         }}
 
         .speech-item-meta {{
@@ -2591,6 +2615,7 @@ html_content = f"""
                         <span class="speech-item-speaker">${{s.speaker}}${{s.role ? ` <span style="font-weight:400;color:#94a3b8;font-size:0.85em">(${{s.role}})</span>` : ''}}</span>
                         <span class="speech-item-date">${{s.date}}${{s.time ? ` at ${{s.time}}` : ''}}</span>
                     </div>
+                    ${{s.title ? `<div class="speech-item-title">${{s.title}}</div>` : ''}}
                     <div class="speech-item-meta">
                         <span class="speech-item-tag">${{s.year}}</span>
                         ${{s.time ? `<span class="speech-item-tag time">🕐 ${{s.time}}</span>` : ''}}
