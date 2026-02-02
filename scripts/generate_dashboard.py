@@ -372,7 +372,7 @@ def get_snippet(text, length=300):
         return text
     return text[:length].rsplit(' ', 1)[0] + "..."
 
-def get_preview(text, length=2000):
+def get_preview(text, length=500):
     if pd.isna(text):
         return ""
     text = str(text).strip()
