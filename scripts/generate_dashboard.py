@@ -161,8 +161,35 @@ df['has_lda_topic'] = df['dominant_topic'].notna()
 df = df.drop(columns=['match_key'])
 
 # Use role directly from year_all data (99.8% coverage)
-df['fed_role'] = df['role']
-print(f"Role data from source: {df['fed_role'].notna().sum()} speeches with role info")
+df['fed_role_raw'] = df['role']
+print(f"Role data from source: {df['fed_role_raw'].notna().sum()} speeches with role info")
+
+# Normalize roles into main categories for cleaner visualization
+def normalize_role(role):
+    if pd.isna(role):
+        return None
+    role_lower = str(role).lower().strip()
+
+    # Chair/Chairman (most specific first)
+    if 'vice chair' in role_lower or 'vice-chair' in role_lower:
+        return 'Vice Chair'
+    if 'chair' in role_lower:
+        return 'Chair'
+
+    # President
+    if 'president' in role_lower:
+        return 'President'
+
+    # Governor
+    if 'governor' in role_lower:
+        return 'Governor'
+
+    # Other staff/directors
+    return 'Other Staff'
+
+df['fed_role'] = df['fed_role_raw'].apply(normalize_role)
+role_counts_debug = df['fed_role'].value_counts()
+print(f"Normalized roles: {role_counts_debug.to_dict()}")
 
 # Load bank metadata from Robin dataset (optional - for fed_bank only)
 speaker_meta_file = '/Users/sophiakazinnik/Research/central_bank_speeches_communication/metadata/speeches_with_metadata.csv'
@@ -1991,14 +2018,22 @@ html_content = f"""
             bargap: 0.15
         }}, {{ responsive: true }});
 
-        // Chart: Role Distribution
+        // Chart: Role Distribution - warm sophisticated palette
+        const roleBarColors = {{
+            'President': '#3B82A0',      // Ocean blue
+            'Governor': '#5AAB7A',       // Fresh green
+            'Chair': '#D4805A',          // Terracotta
+            'Vice Chair': '#8B7EC8',     // Soft violet
+            'Other Staff': '#C9A857'     // Golden wheat
+        }};
+        const barColors = roleNames.map(r => roleBarColors[r] || '#6B7280');
         Plotly.newPlot('chart-roles', [{{
             x: roleValues,
             y: roleNames,
             type: 'bar',
             orientation: 'h',
             marker: {{
-                color: '#E6A940',
+                color: barColors,
                 line: {{ color: 'rgba(255,255,255,0.5)', width: 1 }}
             }},
             hovertemplate: '<b>%{{y}}</b><br>%{{x:,}} speeches<extra></extra>'
@@ -2013,28 +2048,20 @@ html_content = f"""
             bargap: 0.2
         }}, {{ responsive: true }});
 
-        // Chart: Roles Over Time - modern vibrant palette
+        // Chart: Roles Over Time - warm sophisticated palette
         const roleColors = {{
-            'President': '#0D9488',
-            'Governor': '#4A9B6E',
-            'Chair': '#E6A940',
-            'Vice Chair/Governor': '#9B6B9E',
-            'Governor/Vice Chair': '#5B8FB9',
-            'Governor/Vice Chair for Supervision': '#E07A5F',
-            'Executive Vice President': '#7C8A99',
-            'First Vice President': '#A8B5C4',
-            'Interim President': '#C4BDB3'
+            'President': '#3B82A0',      // Ocean blue
+            'Governor': '#5AAB7A',       // Fresh green
+            'Chair': '#D4805A',          // Terracotta
+            'Vice Chair': '#8B7EC8',     // Soft violet
+            'Other Staff': '#C9A857'     // Golden wheat
         }};
         const roleLegendNames = {{
             'President': 'President',
             'Governor': 'Governor',
             'Chair': 'Chair',
-            'Vice Chair/Governor': 'Vice Chair',
-            'Governor/Vice Chair': 'Gov/VC',
-            'Governor/Vice Chair for Supervision': 'VC Supervision',
-            'Executive Vice President': 'Exec VP',
-            'First Vice President': 'First VP',
-            'Interim President': 'Interim'
+            'Vice Chair': 'Vice Chair',
+            'Other Staff': 'Other Staff'
         }};
         const roleTraces = Object.keys(roleTracesData).map(role => ({{
             x: roleYears,
