@@ -160,19 +160,21 @@ for col in lda_cols:
 df['has_lda_topic'] = df['dominant_topic'].notna()
 df = df.drop(columns=['match_key'])
 
-# Load speaker metadata (bank, role)
+# Use role directly from year_all data (99.8% coverage)
+df['fed_role'] = df['role']
+print(f"Role data from source: {df['fed_role'].notna().sum()} speeches with role info")
+
+# Load bank metadata from Robin dataset (optional - for fed_bank only)
 speaker_meta_file = '/Users/sophiakazinnik/Research/central_bank_speeches_communication/metadata/speeches_with_metadata.csv'
 if os.path.exists(speaker_meta_file):
     meta_df = pd.read_csv(speaker_meta_file)
     meta_df['speaker_normalized'] = meta_df['speaker_normalized'].apply(normalize_speaker)
-    meta_lookup = meta_df.groupby('speaker_normalized').first()[['fed_bank', 'fed_role']].to_dict('index')
+    meta_lookup = meta_df.groupby('speaker_normalized').first()[['fed_bank']].to_dict('index')
     df['fed_bank'] = df['speaker'].map(lambda x: meta_lookup.get(x, {}).get('fed_bank'))
-    df['fed_role'] = df['speaker'].map(lambda x: meta_lookup.get(x, {}).get('fed_role'))
-    print(f"Loaded speaker metadata: {df['fed_bank'].notna().sum()} speeches with bank/role info")
+    print(f"Bank metadata from Robin: {df['fed_bank'].notna().sum()} speeches with bank info")
 else:
     df['fed_bank'] = None
-    df['fed_role'] = None
-    print("Speaker metadata file not found - run merge_speaker_metadata.py first")
+    print("Bank metadata file not found - bank filter will be unavailable")
 
 # Get unique banks for filter dropdown
 unique_banks = sorted([b for b in df['fed_bank'].dropna().unique() if b and str(b) != 'nan'])
